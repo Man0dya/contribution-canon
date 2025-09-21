@@ -23,6 +23,8 @@ A fun web service that generates animated SVGs of a canon shooting at your GitHu
 ![GitHub Contribution Canon](https://your-domain.com/USERNAME?theme=dark&speed=fast&canon=tank)
 ```
 
+> **Note:** Replace `your-domain.com` with your deployed app URL. For local testing, use `http://localhost:5001`
+
 ## 📖 API Documentation
 
 ### Basic Usage
@@ -74,7 +76,7 @@ docker run -p 5000:5000 -e GITHUB_TOKEN=your_token contribution-canon
 ### Local Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/contribution-canon.git
+   git clone https://github.com/Man0dya/contribution-canon.git
    cd contribution-canon
    ```
 
