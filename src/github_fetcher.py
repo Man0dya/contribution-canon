@@ -58,7 +58,12 @@ class GitHubContributionFetcher:
             data = response.json()
             
             if 'errors' in data:
+                print(f"GraphQL errors: {data['errors']}")
                 raise Exception(f"GraphQL errors: {data['errors']}")
+            
+            if not data.get('data') or not data['data'].get('user'):
+                print(f"No user data found for {username}")
+                raise Exception(f"User {username} not found or data unavailable")
             
             return self._process_contribution_data(data)
             
@@ -68,28 +73,34 @@ class GitHubContributionFetcher:
     
     def _process_contribution_data(self, data: Dict) -> Dict:
         """Process GraphQL response into a standardized format."""
-        calendar = data['data']['user']['contributionsCollection']['contributionCalendar']
-        
-        contributions = []
-        max_contributions = 0
-        
-        for week in calendar['weeks']:
-            for day in week['contributionDays']:
-                count = day['contributionCount']
-                contributions.append({
-                    'date': day['date'],
-                    'count': count,
-                    'level': self._get_contribution_level(count)
-                })
-                max_contributions = max(max_contributions, count)
-        
-        return {
-            'contributions': contributions,
-            'total_contributions': calendar['totalContributions'],
-            'max_contributions': max_contributions,
-            'weeks': len(calendar['weeks']),
-            'username': data['data']['user']['login'] if 'user' in data['data'] else None
-        }
+        try:
+            user_data = data['data']['user']
+            calendar = user_data['contributionsCollection']['contributionCalendar']
+            
+            contributions = []
+            max_contributions = 0
+            
+            for week in calendar['weeks']:
+                for day in week['contributionDays']:
+                    count = day['contributionCount']
+                    contributions.append({
+                        'date': day['date'],
+                        'count': count,
+                        'level': self._get_contribution_level(count)
+                    })
+                    max_contributions = max(max_contributions, count)
+            
+            return {
+                'contributions': contributions,
+                'total_contributions': calendar['totalContributions'],
+                'max_contributions': max_contributions,
+                'weeks': len(calendar['weeks']),
+                'username': user_data.get('login', 'unknown')
+            }
+        except KeyError as e:
+            print(f"KeyError processing contribution data: {e}")
+            print(f"Data structure: {data}")
+            raise Exception(f"Error processing contribution data: missing key {e}")
     
     def _fallback_contribution_fetch(self, username: str) -> Dict:
         """

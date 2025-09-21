@@ -316,12 +316,150 @@ def internal_error(error):
     return jsonify({'error': 'Internal server error'}), 500
 
 
+@app.route('/test')
+def test_svg():
+    """Test page for debugging SVG animations."""
+    return """<!DOCTYPE html>
+<html>
+<head>
+    <title>SVG Animation Test</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px;
+            background: #f0f0f0;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .svg-container {
+            border: 2px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            background: white;
+            min-height: 200px;
+        }
+        .status {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <h1>🧪 SVG Animation Test</h1>
+    
+    <div class="test-container">
+        <h2>Test 1: Direct SVG from Demo Endpoint</h2>
+        <div id="status1" class="status info">Initializing...</div>
+        <div id="direct-svg" class="svg-container">
+            <p>Loading SVG...</p>
+        </div>
+        <button onclick="loadDirectSVG()">Reload Direct SVG</button>
+    </div>
+    
+    <div class="test-container">
+        <h2>Test 2: SVG via IMG tag (won't animate)</h2>
+        <div class="status info">IMG tags don't support SVG animations</div>
+        <div class="svg-container">
+            <img src="/demo" alt="Demo animation" style="max-width: 100%;" />
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h2>Test 3: Real User SVG (chin00kz)</h2>
+        <div id="status3" class="status info">Ready to load...</div>
+        <div id="user-svg" class="svg-container">
+            <p>Click button to load user SVG...</p>
+        </div>
+        <button onclick="loadUserSVG()">Load User SVG</button>
+    </div>
+
+    <script>
+        function updateStatus(id, message, type = 'info') {
+            const statusEl = document.getElementById(id);
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+        }
+        
+        function loadDirectSVG() {
+            const container = document.getElementById('direct-svg');
+            container.innerHTML = '<p>⏳ Loading demo SVG...</p>';
+            updateStatus('status1', 'Fetching SVG from /demo endpoint...', 'info');
+            
+            fetch('/demo')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    return response.text();
+                })
+                .then(svgContent => {
+                    container.innerHTML = svgContent;
+                    const animCount = (svgContent.match(/animate/g) || []).length;
+                    const circleCount = (svgContent.match(/<circle/g) || []).length;
+                    updateStatus('status1', `✅ Success! SVG loaded (${svgContent.length} chars, ${animCount} animations, ${circleCount} circles)`, 'success');
+                    console.log('Demo SVG loaded successfully!');
+                })
+                .catch(error => {
+                    container.innerHTML = `<p>❌ Error: ${error.message}</p>`;
+                    updateStatus('status1', `❌ Failed: ${error.message}`, 'error');
+                    console.error('Error loading demo SVG:', error);
+                });
+        }
+        
+        function loadUserSVG() {
+            const container = document.getElementById('user-svg');
+            container.innerHTML = '<p>⏳ Loading user SVG...</p>';
+            updateStatus('status3', 'Fetching SVG from /chin00kz endpoint...', 'info');
+            
+            fetch('/chin00kz')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    return response.text();
+                })
+                .then(svgContent => {
+                    container.innerHTML = svgContent;
+                    const animCount = (svgContent.match(/animate/g) || []).length;
+                    const circleCount = (svgContent.match(/<circle/g) || []).length;
+                    updateStatus('status3', `✅ Success! User SVG loaded (${svgContent.length} chars, ${animCount} animations, ${circleCount} circles)`, 'success');
+                    console.log('User SVG loaded successfully!');
+                })
+                .catch(error => {
+                    container.innerHTML = `<p>❌ Error: ${error.message}</p>`;
+                    updateStatus('status3', `❌ Failed: ${error.message}`, 'error');
+                    console.error('Error loading user SVG:', error);
+                });
+        }
+        
+        // Auto-load demo on page load
+        window.addEventListener('load', function() {
+            setTimeout(loadDirectSVG, 1000);
+        });
+        
+        console.log('Test page loaded. Check console for SVG loading messages.');
+    </script>
+</body>
+</html>"""
+
+
 if __name__ == '__main__':
-    # Development server
-    debug_mode = os.getenv('DEBUG', 'False').lower() == 'true'
-    port = int(os.getenv('PORT', 5001))  # Changed to 5001 to avoid conflicts
+    # Production and development server
+    debug_mode = os.getenv('DEBUG', 'True').lower() == 'true'  # Default True for local dev
+    port = int(os.getenv('PORT', 5001))  # Railway/Render will set PORT automatically
     
     logger.info(f"Starting Contribution Canon server on port {port}")
     logger.info(f"Debug mode: {debug_mode}")
+    logger.info(f"Environment: {'Development' if debug_mode else 'Production'}")
     
     app.run(host='0.0.0.0', port=port, debug=debug_mode)

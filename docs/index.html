@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Contribution Canon</title>
+    <meta name="description" content="Transform your GitHub contributions into an epic canon animation for your README!">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>">
+    
+    <style>
+        :root {
+            --primary-color: #2188ff;
+            --success-color: #28a745;
+            --bg-color: #f6f8fa;
+            --card-bg: #ffffff;
+            --text-color: #24292e;
+            --border-color: #e1e4e8;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--bg-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .btn-primary {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn-secondary:hover {
+            background: white;
+            color: var(--text-color);
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+        
+        .demo-section {
+            text-align: center;
+        }
+        
+        .demo-form {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .demo-form input,
+        .demo-form select {
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+        }
+        
+        .demo-form input[type="text"] {
+            min-width: 200px;
+            flex: 1;
+            max-width: 300px;
+        }
+        
+        .demo-form button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .demo-form button:hover {
+            background: #1976d2;
+        }
+        
+        .animation-preview {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .feature {
+            text-align: center;
+            padding: 30px 20px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .feature h3 {
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        
+        .usage-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .code-block {
+            background: #f6f8fa;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 14px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        .alert {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .status {
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 600;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 50px;
+            border-top: 1px solid var(--border-color);
+            color: #6a737d;
+        }
+        
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .demo-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .demo-form input,
+            .demo-form select,
+            .demo-form button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>🎯 GitHub Contribution Canon</h1>
+            <p>Transform your GitHub contributions into an epic animated canon that shoots at your contribution graph!</p>
+            <div class="cta-buttons">
+                <a href="#demo" class="btn btn-primary">Try Live Demo</a>
+                <a href="https://github.com/Man0dya/contribution-canon" class="btn btn-secondary" target="_blank">View on GitHub</a>
+            </div>
+        </div>
+
+        <div class="card demo-section" id="demo">
+            <h2>🚀 Live Demo</h2>
+            <p>Try the canon animation with any GitHub username:</p>
+            
+            <div class="demo-form">
+                <input type="text" id="username" placeholder="Enter GitHub username" value="octocat">
+                <select id="theme">
+                    <option value="light">Light Theme</option>
+                    <option value="dark">Dark Theme</option>
+                    <option value="neon">Neon Theme</option>
+                    <option value="retro">Retro Theme</option>
+                </select>
+                <select id="speed">
+                    <option value="slow">Slow</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="fast">Fast</option>
+                </select>
+                <select id="canon">
+                    <option value="classic" selected>Classic Canon</option>
+                    <option value="tank">Tank</option>
+                    <option value="spaceship">Spaceship</option>
+                </select>
+                <button onclick="generateAnimation()">Generate Animation</button>
+            </div>
+            
+            <div id="status" class="status loading" style="display: none;">
+                Loading animation...
+            </div>
+            
+            <div class="animation-preview" id="preview">
+                <p>👆 Enter a GitHub username above and click "Generate Animation" to see the canon in action!</p>
+                <small>Note: The live service will be deployed to a cloud platform for full functionality.</small>
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature">
+                <div class="feature-icon">🎨</div>
+                <h3>Multiple Themes</h3>
+                <p>Light, dark, neon, and retro color schemes to match your GitHub profile style.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h3>Animation Control</h3>
+                <p>Adjust speed from slow and dramatic to fast-paced action sequences.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🚀</div>
+                <h3>Canon Styles</h3>
+                <p>Choose from classic artillery, military tank, or futuristic spaceship designs.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">💾</div>
+                <h3>README Ready</h3>
+                <p>Perfect for embedding in GitHub README files with simple markdown syntax.</p>
+            </div>
+        </div>
+
+        <div class="card usage-section">
+            <h2>📖 How to Use</h2>
+            
+            <h3>Basic Embed</h3>
+            <div class="code-block">
+![GitHub Contribution Canon](https://your-canon-service.railway.app/YOUR_USERNAME)
+            </div>
+            
+            <h3>With Custom Options</h3>
+            <div class="code-block">
+![Contribution Canon](https://your-canon-service.railway.app/YOUR_USERNAME?theme=dark&speed=fast&canon=tank)
+            </div>
+            
+            <div class="alert">
+                <strong>🚀 Deployment Status:</strong> This service will be deployed to Railway/Render for full functionality. 
+                The URL above is a placeholder - replace with your actual deployment URL.
+            </div>
+
+            <h3>Available Parameters</h3>
+            <ul style="margin: 20px 0; padding-left: 20px;">
+                <li><strong>theme:</strong> light (default), dark, neon, retro</li>
+                <li><strong>speed:</strong> slow, normal (default), fast</li>
+                <li><strong>canon:</strong> classic (default), tank, spaceship</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>🛠️ Local Development</h2>
+            <p>Want to run this locally or contribute? Here's how:</p>
+            
+            <div class="code-block">
+# Clone the repository
+git clone https://github.com/Man0dya/contribution-canon.git
+cd contribution-canon
+
+# Set up virtual environment
+python -m venv .venv
+.venv\Scripts\activate  # Windows
+# or source .venv/bin/activate  # macOS/Linux
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your GitHub token
+
+# Run the application
+python app.py
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Made with ❤️ for the GitHub community</p>
+        <p>
+            <a href="https://github.com/Man0dya/contribution-canon" target="_blank">GitHub Repository</a> |
+            <a href="https://github.com/Man0dya/contribution-canon/blob/main/README.md" target="_blank">Documentation</a> |
+            <a href="https://github.com/Man0dya" target="_blank">Developer</a>
+        </p>
+    </footer>
+
+    <script>
+        // This will be updated to point to your deployed service URL
+        const SERVICE_URL = 'https://your-canon-service.railway.app'; // Replace after deployment
+        
+        function updateStatus(message, type = 'loading') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+        }
+        
+        function hideStatus() {
+            document.getElementById('status').style.display = 'none';
+        }
+        
+        function generateAnimation() {
+            const username = document.getElementById('username').value.trim();
+            const theme = document.getElementById('theme').value;
+            const speed = document.getElementById('speed').value;
+            const canon = document.getElementById('canon').value;
+            
+            if (!username) {
+                alert('Please enter a GitHub username');
+                return;
+            }
+            
+            const preview = document.getElementById('preview');
+            updateStatus('Generating animation...', 'loading');
+            
+            // Build URL with parameters
+            const params = new URLSearchParams({ theme, speed, canon });
+            const url = `${SERVICE_URL}/${username}?${params.toString()}`;
+            
+            // For now, show the URL that would be used (since service isn't deployed yet)
+            setTimeout(() => {
+                preview.innerHTML = `
+                    <div style="padding: 20px; text-align: center;">
+                        <h3>🎯 Animation URL Generated!</h3>
+                        <div class="code-block" style="margin: 20px 0; word-break: break-all;">
+                            ${url}
+                        </div>
+                        <p><strong>Next Steps:</strong></p>
+                        <ol style="text-align: left; display: inline-block; margin: 15px 0;">
+                            <li>Deploy the Flask app to Railway/Render</li>
+                            <li>Update SERVICE_URL in this page</li>
+                            <li>Test the live animation</li>
+                        </ol>
+                        <div class="alert">
+                            <strong>💡 Demo Mode:</strong> Once deployed, this will show the actual animated SVG!
+                        </div>
+                    </div>
+                `;
+                updateStatus('URL generated! Deploy the service to see live animations.', 'success');
+            }, 1000);
+        }
+        
+        // Show sample URL on page load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                const preview = document.getElementById('preview');
+                preview.innerHTML = `
+                    <div style="padding: 20px;">
+                        <h3>🎮 Ready for Demo!</h3>
+                        <p>This page is ready for GitHub Pages hosting.</p>
+                        <p>Deploy the Flask backend to see live animations.</p>
+                        <div style="margin-top: 20px;">
+                            <strong>Deployment Options:</strong><br>
+                            • Railway (recommended)<br>
+                            • Render<br>
+                            • Vercel<br>
+                            • Heroku alternatives
+                        </div>
+                    </div>
+                `;
+                hideStatus();
+            }, 500);
+        });
+    </script>
+</body>
+</html>
