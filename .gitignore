@@ -62,4 +62,4 @@ ehthumbs.db
 Thumbs.db
 
 # GitHub Pages deployment
-.github/
+# Allow .github/ for workflows
