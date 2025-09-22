@@ -215,7 +215,7 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
             className="card max-w-6xl mx-auto p-8 relative overflow-hidden"
           >
             {/* Cannon */}
-            <div className="absolute left-20 top-1/2 transform -translate-y-1/2 z-10">
+            <div className="absolute z-10" style={{ left: '58px', top: 'calc(50% + 30px)' }}>
               <motion.div
                 animate={isPlaying && currentTargetIndex < contributionTargets.length ? {
                   x: [0, -10, 0],
@@ -224,19 +224,19 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
                 transition={{ duration: 0.5, repeat: 1 }}
                 key={currentTargetIndex}
               >
-                <svg width="60" height="36" viewBox="0 0 60 36">
+                <svg width="50" height="50" viewBox="0 0 50 50">
                   {/* Cannon platform */}
-                  <rect x="2" y="28" width="20" height="6" rx="2" fill="url(#cannonBase)" />
+                  <rect x="2" y="40" width="20" height="6" rx="2" fill="url(#cannonBase)" />
                   {/* Cannon wheels */}
-                  <circle cx="8" cy="32" r="3" fill="url(#wheelGrad)" stroke="#333" strokeWidth="0.5" />
-                  <circle cx="16" cy="32" r="3" fill="url(#wheelGrad)" stroke="#333" strokeWidth="0.5" />
+                  <circle cx="8" cy="44" r="3" fill="url(#wheelGrad)" stroke="#333" strokeWidth="0.5" />
+                  <circle cx="16" cy="44" r="3" fill="url(#wheelGrad)" stroke="#333" strokeWidth="0.5" />
                   {/* Cannon body */}
-                  <ellipse cx="12" cy="22" rx="8" ry="6" fill="url(#cannonGrad)" />
-                  {/* Cannon barrel */}
-                  <rect x="12" y="18" width="36" height="4" rx="2" fill="url(#barrelGrad)" />
+                  <ellipse cx="12" cy="34" rx="8" ry="6" fill="url(#cannonGrad)" />
+                  {/* Cannon barrel - angled upward to row 6 */}
+                  <rect x="12" y="28" width="32" height="4" rx="2" fill="url(#barrelGrad)" transform="rotate(-15 28 30)" />
                   {/* Cannon tip detail */}
-                  <circle cx="48" cy="20" r="2.5" fill="url(#tipGrad)" stroke="#333" strokeWidth="0.5" />
-                  <circle cx="48" cy="20" r="1.5" fill="#1a1a1a" />
+                  <circle cx="40" cy="24" r="2.5" fill="url(#tipGrad)" stroke="#333" strokeWidth="0.5" />
+                  <circle cx="40" cy="24" r="1.5" fill="#1a1a1a" />
                   
                   <defs>
                     <linearGradient id="cannonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -268,7 +268,7 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
                 {isPlaying && currentTargetIndex < contributionTargets.length && (
                   <motion.div
                     className="absolute"
-                    style={{ left: '48px', top: '50%', transform: 'translateY(-50%)' }}
+                    style={{ left: '40px', top: '24px' }}
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: [0, 1, 0], scale: [0, 1.5, 0] }}
                     transition={{ duration: 0.3 }}
@@ -368,8 +368,8 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
                   <motion.g key={currentTargetIndex}>
                     {/* Bullet */}
                     <motion.circle
-                      cx={60} // Natural bullet firing position
-                      cy={20} // Natural bullet firing height
+                      cx={42} // Column 3: 3 * 12 + 6 = 42
+                      cy={78} // Row 6: 6 * 12 + 6 = 78
                       r={2}
                       fill="#ff4444"
                       stroke="#ff0000"
@@ -382,10 +382,10 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
                     />
                     {/* Bullet trail */}
                     <motion.line
-                      x1={60}
-                      y1={20}
-                      x2={60}
-                      y2={20}
+                      x1={42}
+                      y1={78}
+                      x2={42}
+                      y2={78}
                       stroke="url(#trailGrad)"
                       strokeWidth="2"
                       strokeLinecap="round"
