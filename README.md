@@ -6,28 +6,86 @@ Transform your GitHub contribution graph into an epic cannon animation! Watch as
 
 ## ✨ Features
 
-- 🎯 **Precision Targeting** - Cannons accurately target each contribution
-- ⚡ **Smooth Animations** - Optimized SVG animations for all devices
+- 🎯 **Precision Targeting** - Auto-popping contribution boxes with explosion effects
+- ⚡ **Smooth Animations** - Optimized SVG animations for all devices  
+- 🤖 **GitHub Actions Automation** - Auto-generates like Snake animation
 - 🎨 **Multiple Themes** - Choose from various color schemes
 - 📐 **Custom Sizes** - Small, medium, or large animations
-- 🚀 **Easy Integration** - One-click copy for README files
+- 🚀 **Easy Integration** - One-click setup for automated updates
 - 📱 **Responsive Design** - Beautiful UI that works everywhere
 - 🔄 **Auto-Loop** - Continuous animation cycles
 - ⚙️ **Customizable Speed** - Adjust animation timing
+- 📊 **Real Data** - Uses actual GitHub contribution statistics
 
 ## 🚀 Quick Start
+
+### Option 1: Automated Animation (Recommended) 
+**Just like the Snake Animation!**
+
+1. Copy the automation files to your repository:
+   ```bash
+   # Add these files to your repo
+   .github/workflows/generate-animation.yml
+   scripts/generate-svg.cjs
+   ```
+
+2. Add this line to your README.md:
+   ```markdown
+   ![Contribution Animation](github-contribution-animation.svg)
+   ```
+
+3. Push to your repository - the animation generates automatically!
+   - ✅ Updates daily with your latest contributions
+   - ✅ Zero maintenance required
+   - ✅ Uses real GitHub API data
+
+### Option 2: Manual Generation
 
 1. Visit [Contribution Canon](https://man0dya.github.io/contribution-canon)
 2. Enter your GitHub username
 3. Customize your cannon theme and settings
-4. Copy the generated markdown code
-5. Paste into your README.md file
+4. Download the SVG file
+5. Add to your repository and reference in README
 6. Watch your contributions get blasted! 💥
+
+## 🤖 GitHub Actions Automation
+
+This project now includes **full automation** just like the popular Snake animation!
+
+### How it works:
+- 📅 **Runs daily** at 00:00 UTC + on every push
+- 🔄 **Fetches real data** from GitHub API  
+- 🎨 **Generates animated SVG** with your contributions
+- 📝 **Auto-commits** the updated file to your repo
+- ⚡ **Zero maintenance** - completely hands-off!
+
+### Setup (30 seconds):
+```bash
+# 1. Copy automation files
+curl -O https://raw.githubusercontent.com/Man0dya/contribution-canon/main/.github/workflows/generate-animation.yml
+mkdir -p .github/workflows && mv generate-animation.yml .github/workflows/
+
+curl -O https://raw.githubusercontent.com/Man0dya/contribution-canon/main/scripts/generate-svg.cjs  
+mkdir -p scripts && mv generate-svg.cjs scripts/
+
+# 2. Add to README.md
+echo "![Contribution Animation](github-contribution-animation.svg)" >> README.md
+
+# 3. Commit and push
+git add . && git commit -m "Add automated contribution animation" && git push
+```
+
+**That's it!** Your animation will generate automatically and stay updated forever.
+
+### 📁 Generated Files:
+- `github-contribution-animation.svg` - Your personal animated contribution graph
+- Updates automatically with your latest activity
+- Perfect for README profiles, documentation, etc.
 
 ## 🎨 Themes Available
 
-- **Default** - Classic blue cannon with orange explosions
-- **GitHub** - Green contribution colors matching GitHub's theme
+- **Default** - Popping contribution boxes with explosion effects
+- **GitHub** - Green contribution colors matching GitHub's theme  
 - **Ocean** - Blue ocean theme with orange accents
 - **Sunset** - Warm red and yellow sunset colors
 
