@@ -137,7 +137,7 @@ const Footer = () => {
               </a>
               <span>•</span>
               <a 
-                href="https://github.com/Man0dya/contribution-canon/discussions" 
+                href="https://github.com/Man0dya/contribution-canon/discussions/1" 
                 className="hover:text-gray-800 transition-colors"
               >
                 Discussions
