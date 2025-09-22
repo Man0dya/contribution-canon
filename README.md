@@ -1,127 +1,171 @@
-# GitHub Contribution Canon Animation
+# 🎯 Contribution Canon
 
-A fun web service that generates animated SVGs of a canon shooting at your GitHub contribution graph. Perfect for spicing up your GitHub README!
+Transform your GitHub contribution graph into an epic cannon animation! Watch as cannons blast through your commits in spectacular fashion.
 
-## 🎯 Features
+![Contribution Canon Demo](./public/demo.gif)
 
-- **Animated Canon**: Watch a canon drive and shoot at your contribution squares
-- **Customizable**: Different themes, colors, and animation speeds
-- **Easy Embedding**: Simple URL format for GitHub READMEs
-- **Fast & Reliable**: Cached animations for optimal performance
+## ✨ Features
+
+- 🎯 **Precision Targeting** - Cannons accurately target each contribution
+- ⚡ **Smooth Animations** - Optimized SVG animations for all devices
+- 🎨 **Multiple Themes** - Choose from various color schemes
+- 📐 **Custom Sizes** - Small, medium, or large animations
+- 🚀 **Easy Integration** - One-click copy for README files
+- 📱 **Responsive Design** - Beautiful UI that works everywhere
+- 🔄 **Auto-Loop** - Continuous animation cycles
+- ⚙️ **Customizable Speed** - Adjust animation timing
 
 ## 🚀 Quick Start
 
-### Embed in your README:
+1. Visit [Contribution Canon](https://yourusername.github.io/contribution-canon)
+2. Enter your GitHub username
+3. Customize your cannon theme and settings
+4. Copy the generated markdown code
+5. Paste into your README.md file
+6. Watch your contributions get blasted! 💥
 
-```markdown
-![GitHub Contribution Canon](https://your-domain.com/USERNAME)
-```
+## 🎨 Themes Available
 
-### With customization:
+- **Default** - Classic blue cannon with orange explosions
+- **Dark Mode** - Purple cannon with golden blasts
+- **Neon** - Vibrant cyan and magenta cyberpunk style
+- **Retro** - Warm yellows and oranges for vintage vibes
 
-```markdown
-![GitHub Contribution Canon](https://your-domain.com/USERNAME?theme=dark&speed=fast&canon=tank)
-```
+## 🛠️ For Developers
 
-> **Note:** Replace `your-domain.com` with your deployed app URL. For local testing, use `http://localhost:5001`
+### Local Development
 
-## 📖 API Documentation
-
-### Basic Usage
-```
-GET /{username}
-```
-
-### Parameters
-- `theme`: `light` (default), `dark`, `neon`, `retro`
-- `speed`: `slow`, `normal` (default), `fast`
-- `canon`: `classic` (default), `tank`, `spaceship`
-- `color`: Custom hex color (e.g., `ff6b35`)
-
-### Examples
-```
-/octocat
-/octocat?theme=dark
-/octocat?theme=neon&speed=fast
-/octocat?canon=tank&color=ff6b35
-```
-
-## � Deployment
-
-### Heroku Deployment
-1. Create a new Heroku app
-2. Set environment variables:
-   ```bash
-   heroku config:set GITHUB_TOKEN=your_token_here
-   heroku config:set SECRET_KEY=your_secret_key
-   ```
-3. Deploy:
-   ```bash
-   git push heroku main
-   ```
-
-### Railway/Render Deployment
-1. Connect your GitHub repository
-2. Set environment variables in the dashboard
-3. Deploy automatically on push
-
-### Docker Deployment
 ```bash
-docker build -t contribution-canon .
-docker run -p 5000:5000 -e GITHUB_TOKEN=your_token contribution-canon
+# Clone the repository
+git clone https://github.com/yourusername/contribution-canon.git
+cd contribution-canon
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
 ```
 
-## �🛠️ Development
+### Build for Production
 
-### Local Setup
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Man0dya/contribution-canon.git
-   cd contribution-canon
-   ```
-
-2. Create virtual environment:
-   ```bash
-   python -m venv .venv
-   .venv\Scripts\activate  # Windows
-   # or
-   source .venv/bin/activate  # macOS/Linux
-   ```
-
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Set up environment variables:
-   ```bash
-   cp .env.example .env
-   # Edit .env with your GitHub token
-   ```
-
-5. Run the application:
-   ```bash
-   python app.py
-   ```
-
-6. Visit `http://localhost:5001` 
-
-   > **Note**: If port 5000 is busy, the app runs on 5001. You can set a custom port with `export PORT=8080` (macOS/Linux) or `$env:PORT=8080` (Windows PowerShell).
-
-### Testing
-Run the test suite to verify functionality:
 ```bash
-python test_functionality.py
+# Build the project
+npm run build
+
+# Deploy to GitHub Pages
+npm run deploy
 ```
 
-## 📝 License
+### Tech Stack
 
-MIT License - Feel free to use and modify!
+- **Frontend**: React 18 + Vite
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
+- **Deployment**: GitHub Pages
+
+### Project Structure
+
+```
+src/
+├── components/
+│   ├── Hero.jsx              # Landing page hero section
+│   ├── UsernameForm.jsx      # GitHub username input form
+│   ├── CannonAnimation.jsx   # Main animation component
+│   ├── CodeGenerator.jsx     # SVG and markdown generator
+│   └── Footer.jsx            # Footer with links
+├── utils/
+│   └── github.js             # GitHub API utilities
+├── App.jsx                   # Main application component
+├── main.jsx                  # React entry point
+└── index.css                 # Global styles and Tailwind
+```
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Create a `.env` file for custom configuration:
+
+```env
+VITE_GITHUB_TOKEN=your_github_token  # Optional: for higher API limits
+VITE_BASE_URL=your_custom_domain     # Optional: for custom deployment
+```
+
+### Customization
+
+You can modify themes, add new animation patterns, or customize the cannon design by editing:
+
+- `src/components/CannonAnimation.jsx` - Animation logic
+- `src/components/CodeGenerator.jsx` - Theme definitions
+- `src/index.css` - Global styles and animations
+
+## 📊 API Reference
+
+### GitHub Data Fetching
+
+The app uses GitHub's public contribution data. For higher rate limits, you can optionally provide a GitHub token.
+
+### SVG Generation
+
+Generated SVGs are self-contained with embedded CSS animations and can be used in:
+
+- GitHub README files
+- Documentation sites
+- Personal websites
+- Social media profiles
 
 ## 🤝 Contributing
 
-Pull requests welcome! Please see CONTRIBUTING.md for guidelines.
+Contributions are welcome! Here's how you can help:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Ideas for Contributions
+
+- New cannon themes and animations
+- Different projectile types (rockets, lasers, etc.)
+- Sound effects (optional toggle)
+- More GitHub integrations (stars, commits, etc.)
+- Performance optimizations
+- Accessibility improvements
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Inspired by the original [GitHub Snake](https://github.com/Platane/snk) animation
+- GitHub for providing the contribution graph data
+- The amazing React and Vite communities
+- All the developers who make open source possible
+
+## 🐛 Bug Reports & Feature Requests
+
+Found a bug or have an idea for a new feature? Please [open an issue](https://github.com/yourusername/contribution-canon/issues) with:
+
+- Clear description of the issue/feature
+- Steps to reproduce (for bugs)
+- Expected vs actual behavior
+- Screenshots if applicable
+
+## ⭐ Show Your Support
+
+If you found this project helpful, please consider:
+
+- ⭐ Starring this repository
+- 🔄 Sharing it with other developers
+- 🐛 Reporting bugs or suggesting improvements
+- ☕ [Buying me a coffee](https://buymeacoffee.com/yourusername)
 
 ---
 
-Made with ❤️ for the GitHub community
+**Made with ❤️ for the developer community**
+
+Transform your GitHub profile with an epic contribution cannon today! 🎯💥
