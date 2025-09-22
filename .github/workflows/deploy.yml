@@ -35,10 +35,17 @@ jobs:
     - name: Build
       run: npm run build
 
+    - name: Enable GitHub Pages
+      run: |
+        gh api repos/${{ github.repository }}/pages \
+          --method POST \
+          --field source='{"branch":"main","path":"/"}' \
+          --field build_type="workflow" || echo "Pages may already be enabled"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Setup Pages
       uses: actions/configure-pages@v4
-      with:
-        enablement: true
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
