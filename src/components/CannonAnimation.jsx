@@ -49,16 +49,15 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
 
     const interval = setInterval(() => {
       setCurrentTargetIndex(prev => {
-        const nextIndex = prev + 1
-        if (nextIndex >= contributionTargets.length) {
+        if (prev >= contributionTargets.length - 1) {
           // All targets destroyed, restart after delay
           setTimeout(() => {
             setCurrentTargetIndex(0)
             setDestroyedCells(new Set())
           }, 2000)
-          return prev // Keep current index until restart
+          return prev
         }
-        return nextIndex
+        return prev + 1
       })
     }, 1500 / animationSpeed) // Slower pace for better visibility
 
@@ -225,86 +224,64 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
                 transition={{ duration: 0.5, repeat: 1 }}
                 key={currentTargetIndex}
               >
-                <svg width="100" height="80" viewBox="0 0 100 80">
+                <svg width="48" height="36" viewBox="0 0 48 36">
+                  {/* Cannon platform */}
+                  <rect x="2" y="28" width="20" height="6" rx="2" fill="url(#cannonBase)" />
+                  {/* Cannon wheels */}
+                  <circle cx="8" cy="32" r="3" fill="url(#wheelGrad)" stroke="#333" strokeWidth="0.5" />
+                  <circle cx="16" cy="32" r="3" fill="url(#wheelGrad)" stroke="#333" strokeWidth="0.5" />
+                  {/* Cannon body */}
+                  <ellipse cx="12" cy="22" rx="8" ry="6" fill="url(#cannonGrad)" />
+                  {/* Cannon barrel */}
+                  <rect x="12" y="18" width="24" height="4" rx="2" fill="url(#barrelGrad)" />
+                  {/* Cannon tip detail */}
+                  <circle cx="36" cy="20" r="2.5" fill="url(#tipGrad)" stroke="#333" strokeWidth="0.5" />
+                  <circle cx="36" cy="20" r="1.5" fill="#1a1a1a" />
+                  
                   <defs>
-                    <linearGradient id="cannonGrad">
-                      <stop offset="0%" stopColor="#1f2937" />
-                      <stop offset="50%" stopColor="#374151" />
-                      <stop offset="100%" stopColor="#111827" />
+                    <linearGradient id="cannonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#4f46e5" />
+                      <stop offset="50%" stopColor="#6366f1" />
+                      <stop offset="100%" stopColor="#7c3aed" />
                     </linearGradient>
-                    <linearGradient id="barrelGrad">
-                      <stop offset="0%" stopColor="#4b5563" />
-                      <stop offset="50%" stopColor="#6b7280" />
+                    <linearGradient id="barrelGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#374151" />
+                      <stop offset="50%" stopColor="#4b5563" />
+                      <stop offset="100%" stopColor="#1f2937" />
+                    </linearGradient>
+                    <linearGradient id="cannonBase" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#6b7280" />
                       <stop offset="100%" stopColor="#374151" />
                     </linearGradient>
-                    <linearGradient id="wheelGrad">
-                      <stop offset="0%" stopColor="#7c2d12" />
-                      <stop offset="50%" stopColor="#dc2626" />
-                      <stop offset="100%" stopColor="#991b1b" />
+                    <linearGradient id="wheelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#9ca3af" />
+                      <stop offset="100%" stopColor="#4b5563" />
+                    </linearGradient>
+                    <linearGradient id="tipGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#6b7280" />
+                      <stop offset="100%" stopColor="#374151" />
                     </linearGradient>
                   </defs>
-                  
-                  {/* Cannon wheels */}
-                  <circle cx="25" cy="65" r="10" fill="url(#wheelGrad)" stroke="#7f1d1d" strokeWidth="2" />
-                  <circle cx="45" cy="65" r="10" fill="url(#wheelGrad)" stroke="#7f1d1d" strokeWidth="2" />
-                  
-                  {/* Wheel spokes */}
-                  <g stroke="#fbbf24" strokeWidth="1">
-                    <line x1="20" y1="65" x2="30" y2="65" />
-                    <line x1="25" y1="60" x2="25" y2="70" />
-                    <line x1="40" y1="65" x2="50" y2="65" />
-                    <line x1="45" y1="60" x2="45" y2="70" />
-                  </g>
-                  
-                  {/* Cannon base platform */}
-                  <rect x="15" y="55" width="40" height="10" rx="5" fill="url(#cannonGrad)" stroke="#000" strokeWidth="1" />
-                  
-                  {/* Cannon body */}
-                  <ellipse cx="30" cy="45" rx="18" ry="12" fill="url(#cannonGrad)" stroke="#000" strokeWidth="2" />
-                  
-                  {/* Cannon barrel */}
-                  <rect x="35" y="37" width="50" height="16" rx="8" fill="url(#barrelGrad)" stroke="#000" strokeWidth="2" />
-                  
-                  {/* Barrel details */}
-                  <rect x="40" y="39" width="5" height="12" fill="#9ca3af" />
-                  <rect x="50" y="39" width="3" height="12" fill="#9ca3af" />
-                  <rect x="60" y="39" width="3" height="12" fill="#9ca3af" />
-                  
-                  {/* Cannon mouth */}
-                  <circle cx="85" cy="45" r="8" fill="#1f2937" stroke="#000" strokeWidth="2" />
-                  <circle cx="85" cy="45" r="5" fill="#000" />
-                  
-                  {/* Decorative elements */}
-                  <rect x="20" y="40" width="8" height="3" rx="1.5" fill="#fbbf24" />
-                  <circle cx="35" cy="50" r="2" fill="#fbbf24" />
                 </svg>
 
-                {/* Muzzle flash effect */}
+                {/* Muzzle flash effect from cannon tip */}
                 {isPlaying && currentTargetIndex < contributionTargets.length && (
                   <motion.div
                     className="absolute"
-                    style={{ right: '15px', top: '50%', transform: 'translateY(-50%)' }}
+                    style={{ left: '36px', top: '50%', transform: 'translateY(-50%)' }}
                     initial={{ opacity: 0, scale: 0 }}
-                    animate={{ 
-                      opacity: [0, 1, 0.8, 0], 
-                      scale: [0, 2, 1.5, 0],
-                      rotate: [0, 45, 90]
-                    }}
-                    transition={{ duration: 0.4 }}
-                    key={currentTargetIndex}
+                    animate={{ opacity: [0, 1, 0], scale: [0, 1.5, 0] }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <div className="relative">
-                      <div className="w-8 h-8 bg-orange-400 rounded-full blur-sm"></div>
-                      <div className="absolute inset-0 w-8 h-8 bg-yellow-300 rounded-full blur-xs"></div>
-                      <div className="absolute inset-2 w-4 h-4 bg-white rounded-full"></div>
-                    </div>
+                    <div className="w-4 h-4 bg-yellow-400 rounded-full blur-sm"></div>
+                    <div className="absolute inset-0 w-4 h-4 bg-orange-500 rounded-full blur-md opacity-60"></div>
                   </motion.div>
                 )}
               </motion.div>
             </div>
 
             {/* Contribution grid */}
-            <div className="ml-24 overflow-x-auto">
+            <div className="ml-16 overflow-x-auto">
               <svg 
                 width={contributionData.length * 12} 
                 height={7 * 12} 
@@ -334,16 +311,14 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
                           stroke={isCurrentTarget ? '#ffd700' : 'transparent'}
                           strokeWidth={isCurrentTarget ? 3 : 0}
                           animate={isDestroyed ? {
-                            scale: [1, 1.2, 0.8, 0],
-                            opacity: [1, 1, 0.5, 0]
+                            scale: [1, 1.2, 0]
                           } : isCurrentTarget ? {
                             scale: [1, 1.1, 1],
                             stroke: ['#ffd700', '#ff6b35', '#ffd700']
                           } : {}}
                           transition={isDestroyed ? {
-                            duration: 0.8,
-                            ease: "easeInOut",
-                            times: [0, 0.3, 0.7, 1]
+                            duration: 0.6,
+                            ease: "easeInOut"
                           } : {
                             duration: 0.5,
                             repeat: Infinity
@@ -388,44 +363,47 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
                   })
                 ))}
 
-                {/* Cannon ball trajectory - starts from cannon mouth */}
+                {/* Cannon ball trajectory from cannon tip */}
                 {isPlaying && currentTargetIndex < contributionTargets.length && contributionTargets[currentTargetIndex] && (
                   <motion.g key={currentTargetIndex}>
-                    {/* Main cannon ball */}
+                    {/* Bullet */}
                     <motion.circle
-                      cx={93}  // Start from cannon mouth (85 + 8)
-                      cy={45}  // Cannon mouth center
-                      r={4}
-                      fill="#dc2626"
-                      stroke="#991b1b"
-                      strokeWidth={2}
-                      animate={{
-                        cx: contributionTargets[currentTargetIndex].weekIndex * 12 + 130, // Adjust for cannon offset
-                        cy: contributionTargets[currentTargetIndex].dayIndex * 12 + 6 + 45 // Adjust for cannon position
-                      }}
-                      transition={{ 
-                        duration: 0.8, 
-                        ease: "easeOut",
-                        type: "tween"
-                      }}
-                    />
-                    {/* Cannon ball trail effect */}
-                    <motion.circle
-                      cx={93}
-                      cy={45}
+                      cx={60} // Start from cannon tip position
+                      cy={20} // Cannon tip height
                       r={2}
-                      fill="#fbbf24"
-                      opacity={0.7}
+                      fill="#ff4444"
+                      stroke="#ff0000"
+                      strokeWidth={0.5}
                       animate={{
-                        cx: contributionTargets[currentTargetIndex].weekIndex * 12 + 130,
-                        cy: contributionTargets[currentTargetIndex].dayIndex * 12 + 6 + 45
+                        cx: contributionTargets[currentTargetIndex].weekIndex * 12 + 6,
+                        cy: contributionTargets[currentTargetIndex].dayIndex * 12 + 6
                       }}
-                      transition={{ 
-                        duration: 0.8, 
-                        ease: "easeOut",
-                        delay: 0.1
-                      }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
                     />
+                    {/* Bullet trail */}
+                    <motion.line
+                      x1={60}
+                      y1={20}
+                      x2={60}
+                      y2={20}
+                      stroke="url(#trailGrad)"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      animate={{
+                        x2: contributionTargets[currentTargetIndex].weekIndex * 12 + 6,
+                        y2: contributionTargets[currentTargetIndex].dayIndex * 12 + 6
+                      }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                      opacity={0.6}
+                    />
+                    
+                    <defs>
+                      <linearGradient id="trailGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#ff4444" stopOpacity="0" />
+                        <stop offset="50%" stopColor="#ff6b35" stopOpacity="0.5" />
+                        <stop offset="100%" stopColor="#ffd700" stopOpacity="1" />
+                      </linearGradient>
+                    </defs>
                   </motion.g>
                 )}
               </svg>
