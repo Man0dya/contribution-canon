@@ -17,7 +17,7 @@ Transform your GitHub contribution graph into an epic cannon animation! Watch as
 
 ## 🚀 Quick Start
 
-1. Visit [Contribution Canon](https://yourusername.github.io/contribution-canon)
+1. Visit [Contribution Canon](https://man0dya.github.io/contribution-canon)
 2. Enter your GitHub username
 3. Customize your cannon theme and settings
 4. Copy the generated markdown code
@@ -27,9 +27,9 @@ Transform your GitHub contribution graph into an epic cannon animation! Watch as
 ## 🎨 Themes Available
 
 - **Default** - Classic blue cannon with orange explosions
-- **Dark Mode** - Purple cannon with golden blasts
-- **Neon** - Vibrant cyan and magenta cyberpunk style
-- **Retro** - Warm yellows and oranges for vintage vibes
+- **GitHub** - Green contribution colors matching GitHub's theme
+- **Ocean** - Blue ocean theme with orange accents
+- **Sunset** - Warm red and yellow sunset colors
 
 ## 🛠️ For Developers
 
@@ -37,7 +37,7 @@ Transform your GitHub contribution graph into an epic cannon animation! Watch as
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/contribution-canon.git
+git clone https://github.com/Man0dya/contribution-canon.git
 cd contribution-canon
 
 # Install dependencies
@@ -148,7 +148,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🐛 Bug Reports & Feature Requests
 
-Found a bug or have an idea for a new feature? Please [open an issue](https://github.com/yourusername/contribution-canon/issues) with:
+Found a bug or have an idea for a new feature? Please [open an issue](https://github.com/Man0dya/contribution-canon/issues) with:
 
 - Clear description of the issue/feature
 - Steps to reproduce (for bugs)
@@ -162,7 +162,7 @@ If you found this project helpful, please consider:
 - ⭐ Starring this repository
 - 🔄 Sharing it with other developers
 - 🐛 Reporting bugs or suggesting improvements
-- ☕ [Buying me a coffee](https://buymeacoffee.com/yourusername)
+- ☕ [Buying me a coffee](https://buymeacoffee.com/man0dya)
 
 ---
 
