@@ -42,101 +42,178 @@ const CodeGenerator = ({ username, contributionData }) => {
   }
 
   const generateSvgCode = () => {
+    if (!contributionData || contributionData.length === 0) {
+      return `<svg width="800" height="200" xmlns="http://www.w3.org/2000/svg">
+        <text x="400" y="100" text-anchor="middle" fill="#666">No contribution data available</text>
+      </svg>`
+    }
+
     const theme = themes[selectedTheme]
     const sizeConfig = sizes[size]
     
+    // Calculate grid dimensions based on real data
+    const weeks = contributionData.length
+    const days = 7
+    const cellSize = 11
+    const gridWidth = weeks * cellSize
+    const gridHeight = days * cellSize
+    
+    // Get only cells with contributions for animation
+    const contributionCells = []
+    contributionData.forEach((week, weekIndex) => {
+      week.forEach((day, dayIndex) => {
+        if (day.count > 0) {
+          contributionCells.push({
+            weekIndex,
+            dayIndex,
+            count: day.count,
+            level: day.level,
+            x: weekIndex * cellSize + 1,
+            y: dayIndex * cellSize + 1
+          })
+        }
+      })
+    })
+
+    const animationDuration = contributionCells.length * 0.8 // 0.8s per cell
+    const speedMultiplier = animationSpeed === 'fast' ? 0.5 : animationSpeed === 'slow' ? 2 : 1
+    const totalDuration = animationDuration * speedMultiplier
+
     return `<svg width="${sizeConfig.width}" height="${sizeConfig.height}" viewBox="0 0 ${sizeConfig.width} ${sizeConfig.height}" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="cannonGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:${theme.cannon};stop-opacity:1" />
-      <stop offset="100%" style="stop-color:${theme.cannon}88;stop-opacity:1" />
-    </linearGradient>
     <style>
-      .contribution-cell { animation: cannon-blast 3s infinite; }
-      .cannon { animation: cannon-recoil 3s infinite; }
-      .projectile { animation: projectile-flight 3s infinite; }
-      
-      @keyframes cannon-blast {
-        0%, 90% { transform: translateX(0) rotate(0deg); }
-        5% { transform: translateX(-8px) rotate(-3deg); }
-        10% { transform: translateX(0) rotate(0deg); }
+      .contribution-grid { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+      .contribution-cell { 
+        animation: pop-animation ${totalDuration}s infinite linear;
+        transform-origin: center;
       }
       
-      @keyframes projectile-flight {
-        0%, 90% { opacity: 0; transform: translateX(0) translateY(0) scale(1); }
-        5% { opacity: 1; }
-        15% { opacity: 1; transform: translateX(${sizeConfig.width * 0.8}px) translateY(-20px) scale(0.8); }
-        20% { opacity: 0; transform: translateX(${sizeConfig.width * 0.9}px) translateY(-10px) scale(0); }
-      }
-      
-      @keyframes cannon-blast {
-        0% { transform: scale(1) rotate(0deg); opacity: 1; }
-        15% { transform: scale(1.2) rotate(180deg); opacity: 0.8; }
-        20% { transform: scale(0) rotate(360deg); opacity: 0; }
-        21%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+      @keyframes pop-animation {
+        0%, 90% { transform: scale(1); opacity: 1; }
+        2% { transform: scale(1.3) rotate(15deg); opacity: 0.8; }
+        4% { transform: scale(0.8) rotate(-10deg); opacity: 0.6; }
+        6% { transform: scale(1.1) rotate(5deg); opacity: 0.4; }
+        8% { transform: scale(0); opacity: 0; }
+        10%, 100% { transform: scale(1); opacity: 1; }
       }
     </style>
   </defs>
   
   <!-- Background -->
-  <rect width="100%" height="100%" fill="${theme.background}"/>
+  <rect width="100%" height="100%" fill="${theme.background}" rx="6"/>
   
-  <!-- Cannon -->
-  <g class="cannon">
-    <circle cx="40" cy="${sizeConfig.height/2}" r="20" fill="url(#cannonGrad)"/>
-    <rect x="35" y="${sizeConfig.height/2 - 8}" width="60" height="16" rx="8" fill="url(#cannonGrad)"/>
-    <circle cx="40" cy="${sizeConfig.height/2}" r="15" fill="none" stroke="${theme.cannon}44" stroke-width="2"/>
+  <!-- Title -->
+  <text x="20" y="30" font-family="sans-serif" font-size="16" font-weight="bold" fill="#333">
+    ${username}'s Contribution Animation
+  </text>
+  
+  <!-- Contribution Grid -->
+  <g class="contribution-grid" transform="translate(20, 50)">
+    ${generateRealContributionGrid(contributionData, theme, contributionCells, totalDuration)}
   </g>
   
-  <!-- Projectile -->
-  <circle class="projectile" cx="95" cy="${sizeConfig.height/2}" r="4" fill="${theme.explosion}"/>
-  
-  <!-- Contribution Grid (Simplified) -->
-  <g transform="translate(150, ${sizeConfig.height/2 - 42})">
-    ${generateContributionGrid(theme)}
+  <!-- Legend -->
+  <g transform="translate(20, ${sizeConfig.height - 30})">
+    <text x="0" y="0" font-family="sans-serif" font-size="12" fill="#666">Less</text>
+    ${[0, 1, 2, 3, 4].map(level => 
+      `<rect x="${40 + level * 15}" y="-10" width="10" height="10" rx="2" fill="${getContributionColorForLevel(level)}"/>`
+    ).join('')}
+    <text x="${40 + 5 * 15}" y="0" font-family="sans-serif" font-size="12" fill="#666">More</text>
   </g>
-  
-  <!-- Muzzle Flash -->
-  <circle cx="95" cy="${sizeConfig.height/2}" r="12" fill="${theme.explosion}" opacity="0.6">
-    <animate attributeName="opacity" values="0;0.8;0" dur="3s" repeatCount="indefinite"/>
-    <animate attributeName="r" values="0;20;0" dur="3s" repeatCount="indefinite"/>
-  </circle>
 </svg>`
   }
 
-  const generateContributionGrid = (theme) => {
-    let grid = ''
-    const weeks = 53
-    const days = 7
+  const getContributionColorForLevel = (level) => {
+    const colors = {
+      0: '#ebedf0', // No contributions
+      1: '#9be9a8', // Low
+      2: '#40c463', // Medium-low  
+      3: '#30a14e', // Medium-high
+      4: '#216e39'  // High
+    }
+    return colors[level] || colors[0]
+  }
+
+  const generateRealContributionGrid = (data, theme, contributionCells, totalDuration) => {
+    if (!data || data.length === 0) return ''
     
-    for (let week = 0; week < weeks; week++) {
-      for (let day = 0; day < days; day++) {
-        const level = Math.floor(Math.random() * 5)
-        const colors = ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353']
+    let grid = ''
+    const cellSize = 11
+    
+    // Generate all cells (background grid)
+    data.forEach((week, weekIndex) => {
+      week.forEach((day, dayIndex) => {
+        const x = weekIndex * cellSize + 1
+        const y = dayIndex * cellSize + 1
+        const color = getContributionColorForLevel(day.level)
         
-        grid += `<rect class="contribution-cell" x="${week * 12}" y="${day * 12}" width="10" height="10" rx="2" fill="${colors[level]}" style="animation-delay: ${(week * 0.1)}s;"/>
+        grid += `<rect x="${x}" y="${y}" width="9" height="9" rx="2" fill="${color}"/>
+        `
+      })
+    })
+    
+    // Generate animated cells (only for contributions > 0)
+    contributionCells.forEach((cell, index) => {
+      const animationDelay = (index * 0.8) % totalDuration // Stagger animations
+      
+      grid += `<rect class="contribution-cell" 
+        x="${cell.x}" y="${cell.y}" 
+        width="9" height="9" rx="2" 
+        fill="${getContributionColorForLevel(cell.level)}"
+        style="animation-delay: ${animationDelay}s;">
+        
+        <!-- Explosion effect -->
+        <animate attributeName="fill" 
+          values="${getContributionColorForLevel(cell.level)};#ff6b35;#ffd700;${getContributionColorForLevel(cell.level)}" 
+          dur="${totalDuration}s" 
+          begin="${animationDelay}s"
+          repeatCount="indefinite"/>
+      </rect>
+      `
+      
+      // Add explosion particles
+      for (let i = 0; i < 4; i++) {
+        const angle = (i * 90) * (Math.PI / 180)
+        const radius = 8
+        const particleX = cell.x + 4.5 + Math.cos(angle) * radius
+        const particleY = cell.y + 4.5 + Math.sin(angle) * radius
+        
+        grid += `<circle cx="${cell.x + 4.5}" cy="${cell.y + 4.5}" r="1" fill="#ffd700" opacity="0">
+          <animate attributeName="cx" 
+            values="${cell.x + 4.5};${particleX};${cell.x + 4.5}" 
+            dur="${totalDuration}s" 
+            begin="${animationDelay}s"
+            repeatCount="indefinite"/>
+          <animate attributeName="cy" 
+            values="${cell.y + 4.5};${particleY};${cell.y + 4.5}" 
+            dur="${totalDuration}s" 
+            begin="${animationDelay}s"
+            repeatCount="indefinite"/>
+          <animate attributeName="opacity" 
+            values="0;0;1;0.5;0" 
+            dur="${totalDuration}s" 
+            begin="${animationDelay}s"
+            repeatCount="indefinite"/>
+        </circle>
         `
       }
-    }
+    })
     
     return grid
   }
 
   const generateMarkdownCode = () => {
-    // Since this is a client-side app without API endpoints, provide a link to the live site
-    const baseUrl = 'https://man0dya.github.io/contribution-canon/'
-    const params = new URLSearchParams({
-      username,
-      theme: selectedTheme,
-      speed: animationSpeed,
-      size
-    })
+    const fileName = `${username}-contribution-animation.svg`
     
-    // Provide both a link and instructions for embedding
-    return `[![${username}'s Contribution Canon](https://img.shields.io/badge/🎯_Contribution_Canon-View_Animation-brightgreen?style=for-the-badge)](${baseUrl}?${params.toString()})
+    return `![${username}'s Contribution Animation](${fileName})
 
-<!-- For a static preview, download the SVG above and commit it to your repo, then reference it like: -->
-<!-- ![Contribution Animation](./path-to-your-downloaded-svg.svg) -->`
+<!-- 
+Steps to add to your README:
+1. Click "Download SVG" above
+2. Save the file as "${fileName}" in your repository root
+3. Commit and push the SVG file to your repo
+4. The animation will display in your README!
+-->`
   }
 
   const handleCopy = async () => {
@@ -156,7 +233,7 @@ const CodeGenerator = ({ username, contributionData }) => {
     
     const a = document.createElement('a')
     a.href = url
-    a.download = `${username}-contribution-cannon.svg`
+    a.download = `${username}-contribution-animation.svg`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -311,25 +388,18 @@ const CodeGenerator = ({ username, contributionData }) => {
                 </div>
 
                 {/* Instructions */}
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <h4 className="text-blue-700 font-semibold mb-2">📝 How to use:</h4>
-                  <div className="space-y-3">
-                    <div>
-                      <h5 className="font-medium text-gray-800">Option 1: Badge Link (Recommended)</h5>
-                      <ol className="text-gray-700 text-sm space-y-1 list-decimal list-inside ml-2">
-                        <li>Copy the markdown code above</li>
-                        <li>Paste it into your GitHub README.md file</li>
-                        <li>This creates a clickable badge that links to your animation</li>
-                      </ol>
-                    </div>
-                    <div>
-                      <h5 className="font-medium text-gray-800">Option 2: Static SVG</h5>
-                      <ol className="text-gray-700 text-sm space-y-1 list-decimal list-inside ml-2">
-                        <li>Click "Download SVG" above</li>
-                        <li>Add the SVG file to your repository</li>
-                        <li>Reference it in your README: <code className="text-xs bg-gray-100 px-1 rounded">![Animation](./your-file.svg)</code></li>
-                      </ol>
-                    </div>
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h4 className="text-green-700 font-semibold mb-2">📝 How to embed in your README:</h4>
+                  <ol className="text-gray-700 text-sm space-y-2 list-decimal list-inside">
+                    <li>Click <strong>"Download SVG"</strong> above to get your animated file</li>
+                    <li>Save it as <code className="bg-gray-100 px-1 rounded text-xs">{username}-contribution-animation.svg</code> in your repository root</li>
+                    <li>Copy the markdown code above and paste it in your README.md</li>
+                    <li>Commit and push both files to your repository</li>
+                    <li>🎉 Your animated contribution graph will appear in your README!</li>
+                  </ol>
+                  
+                  <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
+                    <strong>💡 Tip:</strong> The SVG contains real animation with your actual contribution data, just like the snake animation!
                   </div>
                 </div>
 
