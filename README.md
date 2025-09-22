@@ -2,8 +2,6 @@
 
 Transform your GitHub contribution graph into an epic animated display! Watch as your contributions pop and explode with spectacular effects, creating a dynamic visualization perfect for your README.
 
-![Contribution Canon Demo](./public/demo.gif)
-
 ---
 
 ## � For Users
