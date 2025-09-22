@@ -368,8 +368,8 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
                   <motion.g key={currentTargetIndex}>
                     {/* Bullet */}
                     <motion.circle
-                      cx={60} // Start from cannon tip position
-                      cy={20} // Cannon tip height
+                      cx={-8} // Start from actual cannon tip position (further left of grid)
+                      cy={36} // Cannon tip height (adjusted for better alignment)
                       r={2}
                       fill="#ff4444"
                       stroke="#ff0000"
@@ -382,10 +382,10 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
                     />
                     {/* Bullet trail */}
                     <motion.line
-                      x1={60}
-                      y1={20}
-                      x2={60}
-                      y2={20}
+                      x1={-8}
+                      y1={36}
+                      x2={-8}
+                      y2={36}
                       stroke="url(#trailGrad)"
                       strokeWidth="2"
                       strokeLinecap="round"
