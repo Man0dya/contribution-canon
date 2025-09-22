@@ -59,7 +59,7 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
         }
         return prev + 1
       })
-    }, 1500 / animationSpeed) // Slower pace for better visibility
+    }, 800 / animationSpeed) // Faster pace for auto-popping
 
     return () => clearInterval(interval)
   }, [isPlaying, contributionTargets, animationSpeed])
@@ -70,10 +70,10 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
 
     const currentTarget = contributionTargets[currentTargetIndex]
     if (currentTarget) {
-      // Add delay before destroying to show the cannon ball animation
+      // Immediately destroy the target (auto-pop)
       setTimeout(() => {
         setDestroyedCells(prev => new Set([...prev, currentTarget.cellKey]))
-      }, 800) // Match the cannon ball animation duration
+      }, 200) // Quick pop animation
     }
   }, [currentTargetIndex, contributionTargets])
 
@@ -214,74 +214,8 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
             viewport={{ once: true }}
             className="card max-w-6xl mx-auto p-8 relative overflow-hidden"
           >
-            {/* Cannon */}
-            <div className="absolute z-10" style={{ left: '58px', top: 'calc(50% + 30px)' }}>
-              <motion.div
-                animate={isPlaying && currentTargetIndex < contributionTargets.length ? {
-                  x: [0, -10, 0],
-                  rotate: [0, -5, 0]
-                } : {}}
-                transition={{ duration: 0.5, repeat: 1 }}
-                key={currentTargetIndex}
-              >
-                <svg width="50" height="50" viewBox="0 0 50 50">
-                  {/* Cannon platform */}
-                  <rect x="2" y="40" width="20" height="6" rx="2" fill="url(#cannonBase)" />
-                  {/* Cannon wheels */}
-                  <circle cx="8" cy="44" r="3" fill="url(#wheelGrad)" stroke="#333" strokeWidth="0.5" />
-                  <circle cx="16" cy="44" r="3" fill="url(#wheelGrad)" stroke="#333" strokeWidth="0.5" />
-                  {/* Cannon body */}
-                  <ellipse cx="12" cy="34" rx="8" ry="6" fill="url(#cannonGrad)" />
-                  {/* Cannon barrel - angled upward to row 6 */}
-                  <rect x="12" y="28" width="32" height="4" rx="2" fill="url(#barrelGrad)" transform="rotate(-15 28 30)" />
-                  {/* Cannon tip detail */}
-                  <circle cx="40" cy="24" r="2.5" fill="url(#tipGrad)" stroke="#333" strokeWidth="0.5" />
-                  <circle cx="40" cy="24" r="1.5" fill="#1a1a1a" />
-                  
-                  <defs>
-                    <linearGradient id="cannonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#4f46e5" />
-                      <stop offset="50%" stopColor="#6366f1" />
-                      <stop offset="100%" stopColor="#7c3aed" />
-                    </linearGradient>
-                    <linearGradient id="barrelGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#374151" />
-                      <stop offset="50%" stopColor="#4b5563" />
-                      <stop offset="100%" stopColor="#1f2937" />
-                    </linearGradient>
-                    <linearGradient id="cannonBase" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#6b7280" />
-                      <stop offset="100%" stopColor="#374151" />
-                    </linearGradient>
-                    <linearGradient id="wheelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#9ca3af" />
-                      <stop offset="100%" stopColor="#4b5563" />
-                    </linearGradient>
-                    <linearGradient id="tipGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#6b7280" />
-                      <stop offset="100%" stopColor="#374151" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-
-                {/* Muzzle flash effect from cannon tip */}
-                {isPlaying && currentTargetIndex < contributionTargets.length && (
-                  <motion.div
-                    className="absolute"
-                    style={{ left: '40px', top: '24px' }}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: [0, 1, 0], scale: [0, 1.5, 0] }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="w-4 h-4 bg-yellow-400 rounded-full blur-sm"></div>
-                    <div className="absolute inset-0 w-4 h-4 bg-orange-500 rounded-full blur-md opacity-60"></div>
-                  </motion.div>
-                )}
-              </motion.div>
-            </div>
-
             {/* Contribution grid */}
-            <div className="ml-16 overflow-x-auto">
+            <div className="overflow-x-auto">
               <svg 
                 width={contributionData.length * 12} 
                 height={7 * 12} 
@@ -362,50 +296,6 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
                     )
                   })
                 ))}
-
-                {/* Cannon ball trajectory from cannon tip */}
-                {isPlaying && currentTargetIndex < contributionTargets.length && contributionTargets[currentTargetIndex] && (
-                  <motion.g key={currentTargetIndex}>
-                    {/* Bullet */}
-                    <motion.circle
-                      cx={42} // Column 3: 3 * 12 + 6 = 42
-                      cy={78} // Row 6: 6 * 12 + 6 = 78
-                      r={2}
-                      fill="#ff4444"
-                      stroke="#ff0000"
-                      strokeWidth={0.5}
-                      animate={{
-                        cx: contributionTargets[currentTargetIndex].weekIndex * 12 + 6,
-                        cy: contributionTargets[currentTargetIndex].dayIndex * 12 + 6
-                      }}
-                      transition={{ duration: 0.8, ease: "easeOut" }}
-                    />
-                    {/* Bullet trail */}
-                    <motion.line
-                      x1={42}
-                      y1={78}
-                      x2={42}
-                      y2={78}
-                      stroke="url(#trailGrad)"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      animate={{
-                        x2: contributionTargets[currentTargetIndex].weekIndex * 12 + 6,
-                        y2: contributionTargets[currentTargetIndex].dayIndex * 12 + 6
-                      }}
-                      transition={{ duration: 0.8, ease: "easeOut" }}
-                      opacity={0.6}
-                    />
-                    
-                    <defs>
-                      <linearGradient id="trailGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#ff4444" stopOpacity="0" />
-                        <stop offset="50%" stopColor="#ff6b35" stopOpacity="0.5" />
-                        <stop offset="100%" stopColor="#ffd700" stopOpacity="1" />
-                      </linearGradient>
-                    </defs>
-                  </motion.g>
-                )}
               </svg>
             </div>
 
