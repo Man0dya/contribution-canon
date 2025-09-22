@@ -1,6 +1,12 @@
+<div align="center">
+
 # 🎯 Contribution Canon
 
+### 🚀 [**Live Demo**](https://man0dya.github.io/contribution-canon/) 🚀
+
 Transform your GitHub contribution graph into an epic animated display! Watch as your contributions pop and explode with spectacular effects, creating a dynamic visualization perfect for your README.
+
+</div>
 
 ---
 
