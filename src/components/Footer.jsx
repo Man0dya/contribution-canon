@@ -39,7 +39,7 @@ const Footer = () => {
               className="flex flex-wrap justify-center gap-4"
             >
               <motion.a
-                href="https://github.com/yourusername/contribution-canon"
+                href="https://github.com/Man0dya/contribution-canon"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
@@ -51,7 +51,7 @@ const Footer = () => {
               </motion.a>
 
               <motion.a
-                href="https://github.com/yourusername/contribution-canon"
+                href="https://github.com/Man0dya/contribution-canon"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
@@ -63,7 +63,7 @@ const Footer = () => {
               </motion.a>
 
               <motion.a
-                href="https://buymeacoffee.com/yourusername"
+                href="https://buymeacoffee.com/Man0dya"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
@@ -123,21 +123,21 @@ const Footer = () => {
               <span>© 2025 Contribution Canon</span>
               <span>•</span>
               <a 
-                href="https://github.com/yourusername/contribution-canon/blob/main/LICENSE" 
+                href="https://github.com/Man0dya/contribution-canon/blob/main/LICENSE" 
                 className="hover:text-gray-800 transition-colors"
               >
                 MIT License
               </a>
               <span>•</span>
               <a 
-                href="https://github.com/yourusername/contribution-canon/issues" 
+                href="https://github.com/Man0dya/contribution-canon/issues" 
                 className="hover:text-gray-800 transition-colors"
               >
                 Report Issues
               </a>
               <span>•</span>
               <a 
-                href="https://github.com/yourusername/contribution-canon/discussions" 
+                href="https://github.com/Man0dya/contribution-canon/discussions" 
                 className="hover:text-gray-800 transition-colors"
               >
                 Discussions
