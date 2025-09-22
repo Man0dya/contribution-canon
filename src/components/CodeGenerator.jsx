@@ -123,7 +123,8 @@ const CodeGenerator = ({ username, contributionData }) => {
   }
 
   const generateMarkdownCode = () => {
-    const baseUrl = window.location.origin + window.location.pathname
+    // Since this is a client-side app without API endpoints, provide a link to the live site
+    const baseUrl = 'https://man0dya.github.io/contribution-canon/'
     const params = new URLSearchParams({
       username,
       theme: selectedTheme,
@@ -131,7 +132,11 @@ const CodeGenerator = ({ username, contributionData }) => {
       size
     })
     
-    return `![${username}'s Contribution Canon](${baseUrl}api/generate?${params.toString()})`
+    // Provide both a link and instructions for embedding
+    return `[![${username}'s Contribution Canon](https://img.shields.io/badge/🎯_Contribution_Canon-View_Animation-brightgreen?style=for-the-badge)](${baseUrl}?${params.toString()})
+
+<!-- For a static preview, download the SVG above and commit it to your repo, then reference it like: -->
+<!-- ![Contribution Animation](./path-to-your-downloaded-svg.svg) -->`
   }
 
   const handleCopy = async () => {
@@ -308,12 +313,24 @@ const CodeGenerator = ({ username, contributionData }) => {
                 {/* Instructions */}
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <h4 className="text-blue-700 font-semibold mb-2">📝 How to use:</h4>
-                  <ol className="text-gray-700 text-sm space-y-1 list-decimal list-inside">
-                    <li>Copy the markdown code above</li>
-                    <li>Paste it into your GitHub README.md file</li>
-                    <li>Commit and push your changes</li>
-                    <li>Watch your contribution cannon in action! 🎯</li>
-                  </ol>
+                  <div className="space-y-3">
+                    <div>
+                      <h5 className="font-medium text-gray-800">Option 1: Badge Link (Recommended)</h5>
+                      <ol className="text-gray-700 text-sm space-y-1 list-decimal list-inside ml-2">
+                        <li>Copy the markdown code above</li>
+                        <li>Paste it into your GitHub README.md file</li>
+                        <li>This creates a clickable badge that links to your animation</li>
+                      </ol>
+                    </div>
+                    <div>
+                      <h5 className="font-medium text-gray-800">Option 2: Static SVG</h5>
+                      <ol className="text-gray-700 text-sm space-y-1 list-decimal list-inside ml-2">
+                        <li>Click "Download SVG" above</li>
+                        <li>Add the SVG file to your repository</li>
+                        <li>Reference it in your README: <code className="text-xs bg-gray-100 px-1 rounded">![Animation](./your-file.svg)</code></li>
+                      </ol>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Preview */}
