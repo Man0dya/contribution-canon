@@ -241,7 +241,7 @@ Steps to add to your README:
   }
 
   return (
-    <section className="py-16">
+    <section className="py-6">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -251,12 +251,12 @@ Steps to add to your README:
           className="max-w-6xl mx-auto"
         >
           {/* Section header */}
-          <div className="text-center mb-8">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
               🎨 Customize & Export
             </h2>
-            <p className="text-xl text-gray-600">
-              Personalize your cannon and get the code for your README
+            <p className="text-lg text-gray-600">
+              Get your animated SVG for README
             </p>
           </div>
 

@@ -112,7 +112,7 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
   }
 
   return (
-    <section className="py-16">
+    <section className="py-6">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 50 }}

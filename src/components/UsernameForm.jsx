@@ -31,12 +31,9 @@ const UsernameForm = ({ onSubmit, isLoading }) => {
   }
 
   return (
-    <section id="username-form" className="bg-white py-8">
+    <section id="username-form" className="bg-white py-4">
       <div className="container mx-auto px-4">
         <div className="max-w-lg mx-auto text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Enter GitHub Username
-          </h2>
 
           <div className="card">
             <form onSubmit={handleSubmit} className="space-y-4">

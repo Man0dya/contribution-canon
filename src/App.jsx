@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Hero from './components/Hero'
 import UsernameForm from './components/UsernameForm'
 import CannonAnimation from './components/CannonAnimation'
 import CodeGenerator from './components/CodeGenerator'
@@ -74,9 +73,7 @@ function App() {
     <div className="min-h-screen bg-gray-50">
       {/* Main content */}
       <div className="relative">
-        <Hero />
-        
-        <main className="container mx-auto px-4 py-16 space-y-16">
+        <main className="container mx-auto px-4 py-8 space-y-8">
           <UsernameForm 
             onSubmit={handleUsernameSubmit}
             isLoading={isLoading}
@@ -106,7 +103,7 @@ function App() {
           )}
           
           {contributionData && (
-            <>
+            <div className="space-y-6">
               <CannonAnimation 
                 key={animationKey}
                 contributionData={contributionData}
@@ -119,7 +116,7 @@ function App() {
                 contributionData={contributionData}
                 isUsingMockData={isUsingMockData}
               />
-            </>
+            </div>
           )}
         </main>
         
