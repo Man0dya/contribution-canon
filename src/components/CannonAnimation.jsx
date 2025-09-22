@@ -4,84 +4,85 @@ import { Play, Pause, RotateCcw, Download } from 'lucide-react'
 
 const CannonAnimation = ({ contributionData, username, isUsingMockData = false }) => {
   const [isPlaying, setIsPlaying] = useState(true)
-  const [currentWeek, setCurrentWeek] = useState(0)
+  const [currentTargetIndex, setCurrentTargetIndex] = useState(0)
   const [destroyedCells, setDestroyedCells] = useState(new Set())
   const [animationSpeed, setAnimationSpeed] = useState(1)
+  const [contributionTargets, setContributionTargets] = useState([])
 
-  // Debug: Log contribution data
+  // Create list of contribution targets (only cells with contributions)
   useEffect(() => {
     if (contributionData) {
-      const flatData = contributionData.flat()
-      const totalContributions = flatData.reduce((sum, day) => sum + day.count, 0)
-      const nonZeroDays = flatData.filter(day => day.count > 0)
-      const levelDistribution = flatData.reduce((acc, day) => {
-        acc[day.level] = (acc[day.level] || 0) + 1
-        return acc
-      }, {})
+      const targets = []
+      contributionData.forEach((week, weekIndex) => {
+        week.forEach((day, dayIndex) => {
+          if (day.count > 0) {
+            targets.push({
+              weekIndex,
+              dayIndex,
+              count: day.count,
+              level: day.level,
+              cellKey: `${weekIndex}-${dayIndex}`
+            })
+          }
+        })
+      })
       
-      console.log('🎬 CannonAnimation received data:', {
-        username,
-        isUsingMockData,
-        dataLength: contributionData?.length,
-        sampleWeek: contributionData?.[0],
-        totalContributions,
-        nonZeroDays: nonZeroDays.length,
-        sampleContributions: nonZeroDays.slice(0, 3),
-        levelDistribution
+      setContributionTargets(targets)
+      console.log('🎯 Found contribution targets:', {
+        totalTargets: targets.length,
+        totalCells: contributionData.flat().length,
+        sampleTargets: targets.slice(0, 5)
       })
     }
-  }, [contributionData, username, isUsingMockData])
+  }, [contributionData])
 
   // Reset animation when new data comes in
   useEffect(() => {
-    setCurrentWeek(0)
+    setCurrentTargetIndex(0)
     setDestroyedCells(new Set())
     setIsPlaying(true)
   }, [contributionData])
 
-  // Animation loop
+  // Animation loop - only shoot at contribution targets
   useEffect(() => {
-    if (!isPlaying || !contributionData) return
+    if (!isPlaying || contributionTargets.length === 0) return
 
     const interval = setInterval(() => {
-      setCurrentWeek(prev => {
-        if (prev >= contributionData.length - 1) {
-          // Animation complete, restart after delay
+      setCurrentTargetIndex(prev => {
+        if (prev >= contributionTargets.length - 1) {
+          // All targets destroyed, restart after delay
           setTimeout(() => {
-            setCurrentWeek(0)
+            setCurrentTargetIndex(0)
             setDestroyedCells(new Set())
           }, 2000)
           return prev
         }
         return prev + 1
       })
-    }, 1000 / animationSpeed)
+    }, 1500 / animationSpeed) // Slower pace for better visibility
 
     return () => clearInterval(interval)
-  }, [isPlaying, contributionData, animationSpeed])
+  }, [isPlaying, contributionTargets, animationSpeed])
 
-  // Update destroyed cells when week changes
+  // Update destroyed cells when target changes
   useEffect(() => {
-    if (!contributionData || currentWeek >= contributionData.length) return
+    if (contributionTargets.length === 0 || currentTargetIndex >= contributionTargets.length) return
 
-    const weekData = contributionData[currentWeek]
-    const newDestroyed = new Set(destroyedCells)
-    
-    weekData.forEach((day, dayIndex) => {
-      if (day.count > 0) {
-        newDestroyed.add(`${currentWeek}-${dayIndex}`)
-      }
-    })
-    
-    setDestroyedCells(newDestroyed)
-  }, [currentWeek, contributionData])
+    const currentTarget = contributionTargets[currentTargetIndex]
+    if (currentTarget) {
+      // Add delay before destroying to show the cannon ball animation
+      setTimeout(() => {
+        setDestroyedCells(prev => new Set([...prev, currentTarget.cellKey]))
+      }, 800) // Match the cannon ball animation duration
+    }
+  }, [currentTargetIndex, contributionTargets])
 
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying)
   }
 
   const handleRestart = () => {
-    setCurrentWeek(0)
+    setCurrentTargetIndex(0)
     setDestroyedCells(new Set())
     setIsPlaying(true)
   }
@@ -184,22 +185,24 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
                 className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full"
                 initial={{ width: 0 }}
                 animate={{ 
-                  width: contributionData ? `${(currentWeek / contributionData.length) * 100}%` : '0%' 
+                  width: contributionTargets.length > 0 ? `${(currentTargetIndex / contributionTargets.length) * 100}%` : '0%' 
                 }}
                 transition={{ duration: 0.3 }}
               />
             </div>
 
             <p className="text-gray-600 text-sm">
-              Week {currentWeek + 1} of {contributionData?.length || 0} 
+              Target {currentTargetIndex + 1} of {contributionTargets.length} 
               | Contributions Destroyed: {destroyedCells.size}
-              | Total Contributions: {contributionData?.flat().reduce((sum, day) => sum + day.count, 0) || 0}
+              | Total Contribution Days: {contributionTargets.length}
             </p>
             {/* Debug info */}
             <div className="text-xs text-gray-400 mt-2">
               Data Type: {isUsingMockData ? 'Mock' : 'Real'} | 
               Weeks: {contributionData?.length || 0} | 
-              Sample Day: {contributionData?.[0]?.[0] ? `${contributionData[0][0].date} (${contributionData[0][0].count} contributions)` : 'None'}
+              Current Target: {contributionTargets[currentTargetIndex] ? 
+                `Week ${contributionTargets[currentTargetIndex].weekIndex + 1}, Day ${contributionTargets[currentTargetIndex].dayIndex + 1} (${contributionTargets[currentTargetIndex].count} contributions)` 
+                : 'None'}
             </div>
           </motion.div>
 
@@ -214,12 +217,12 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
             {/* Cannon */}
             <div className="absolute left-8 top-1/2 transform -translate-y-1/2 z-10">
               <motion.div
-                animate={isPlaying && currentWeek < contributionData.length ? {
+                animate={isPlaying && currentTargetIndex < contributionTargets.length ? {
                   x: [0, -10, 0],
                   rotate: [0, -5, 0]
                 } : {}}
                 transition={{ duration: 0.5, repeat: 1 }}
-                key={currentWeek}
+                key={currentTargetIndex}
               >
                 <svg width="80" height="60" viewBox="0 0 80 60">
                   {/* Cannon base */}
@@ -238,7 +241,7 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
                 </svg>
 
                 {/* Muzzle flash effect */}
-                {isPlaying && currentWeek < contributionData.length && (
+                {isPlaying && currentTargetIndex < contributionTargets.length && (
                   <motion.div
                     className="absolute right-0 top-1/2 transform -translate-y-1/2"
                     initial={{ opacity: 0, scale: 0 }}
@@ -263,7 +266,11 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
                   week.map((day, dayIndex) => {
                     const cellKey = `${weekIndex}-${dayIndex}`
                     const isDestroyed = destroyedCells.has(cellKey)
-                    const isCurrentTarget = weekIndex === currentWeek && day.count > 0
+                    const currentTarget = contributionTargets[currentTargetIndex]
+                    const isCurrentTarget = currentTarget && 
+                      currentTarget.weekIndex === weekIndex && 
+                      currentTarget.dayIndex === dayIndex &&
+                      !isDestroyed
                     
                     return (
                       <motion.g key={cellKey}>
@@ -276,12 +283,13 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
                           rx={2}
                           fill={isDestroyed ? '#ff4444' : getContributionColor(day.level)}
                           stroke={isCurrentTarget ? '#ffd700' : 'transparent'}
-                          strokeWidth={2}
+                          strokeWidth={isCurrentTarget ? 3 : 0}
                           animate={isDestroyed ? {
                             scale: [1, 1.2, 0],
                             rotate: [0, 180, 360]
                           } : isCurrentTarget ? {
-                            scale: [1, 1.1, 1]
+                            scale: [1, 1.1, 1],
+                            stroke: ['#ffd700', '#ff6b35', '#ffd700']
                           } : {}}
                           transition={isDestroyed ? {
                             duration: 0.6,
@@ -294,38 +302,59 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
 
                         {/* Explosion effect */}
                         {isDestroyed && (
-                          <motion.circle
-                            cx={weekIndex * 12 + 6}
-                            cy={dayIndex * 12 + 6}
-                            r={0}
-                            fill="#ff6b35"
-                            opacity={0.8}
-                            animate={{
-                              r: [0, 15, 25],
-                              opacity: [0.8, 0.4, 0]
-                            }}
-                            transition={{ duration: 0.8 }}
-                          />
-                        )}
-
-                        {/* Cannon ball trajectory */}
-                        {isCurrentTarget && isPlaying && (
-                          <motion.circle
-                            cx={80}
-                            cy={30}
-                            r={2}
-                            fill="#ff4444"
-                            animate={{
-                              cx: weekIndex * 12 + 6,
-                              cy: dayIndex * 12 + 6
-                            }}
-                            transition={{ duration: 0.8, ease: "easeOut" }}
-                          />
+                          <motion.g>
+                            <motion.circle
+                              cx={weekIndex * 12 + 6}
+                              cy={dayIndex * 12 + 6}
+                              r={0}
+                              fill="#ff6b35"
+                              opacity={0.8}
+                              animate={{
+                                r: [0, 15, 25],
+                                opacity: [0.8, 0.4, 0]
+                              }}
+                              transition={{ duration: 0.8 }}
+                            />
+                            {/* Explosion particles */}
+                            {[...Array(6)].map((_, i) => (
+                              <motion.circle
+                                key={i}
+                                cx={weekIndex * 12 + 6}
+                                cy={dayIndex * 12 + 6}
+                                r={1}
+                                fill="#ffd700"
+                                animate={{
+                                  cx: weekIndex * 12 + 6 + Math.cos(i * Math.PI / 3) * 20,
+                                  cy: dayIndex * 12 + 6 + Math.sin(i * Math.PI / 3) * 20,
+                                  opacity: [1, 0]
+                                }}
+                                transition={{ duration: 0.6, delay: 0.2 }}
+                              />
+                            ))}
+                          </motion.g>
                         )}
                       </motion.g>
                     )
                   })
                 ))}
+
+                {/* Cannon ball trajectory - separate from grid for better visibility */}
+                {isPlaying && currentTargetIndex < contributionTargets.length && contributionTargets[currentTargetIndex] && (
+                  <motion.circle
+                    cx={80}
+                    cy={30}
+                    r={3}
+                    fill="#ff4444"
+                    stroke="#ff0000"
+                    strokeWidth={1}
+                    animate={{
+                      cx: contributionTargets[currentTargetIndex].weekIndex * 12 + 6,
+                      cy: contributionTargets[currentTargetIndex].dayIndex * 12 + 6
+                    }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    key={currentTargetIndex}
+                  />
+                )}
               </svg>
             </div>
 
