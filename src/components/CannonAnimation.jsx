@@ -212,14 +212,15 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="card max-w-6xl mx-auto p-8 relative overflow-hidden"
+            className="bg-white border border-gray-200 rounded-lg shadow-sm p-12 relative overflow-hidden mx-auto"
+            style={{ maxWidth: '1200px' }}
           >
             {/* Contribution grid */}
-            <div className="overflow-x-auto">
+            <div className="flex justify-center">
               <svg 
-                width={contributionData.length * 12} 
-                height={7 * 12} 
-                viewBox={`0 0 ${contributionData.length * 12} ${7 * 12}`}
+                width={Math.min(contributionData.length * 16, 1100)} 
+                height={7 * 16} 
+                viewBox={`0 0 ${contributionData.length * 16} ${7 * 16}`}
                 className="border border-gray-200 rounded-lg bg-gray-50"
               >
                 {contributionData.map((week, weekIndex) => (
@@ -236,10 +237,10 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
                       <motion.g key={cellKey}>
                         {/* Contribution cell */}
                         <motion.rect
-                          x={weekIndex * 12 + 1}
-                          y={dayIndex * 12 + 1}
-                          width={10}
-                          height={10}
+                          x={weekIndex * 16 + 2}
+                          y={dayIndex * 16 + 2}
+                          width={12}
+                          height={12}
                           rx={2}
                           fill={isDestroyed ? '#ff4444' : getContributionColor(day.level)}
                           stroke={isCurrentTarget ? '#ffd700' : 'transparent'}
@@ -263,8 +264,8 @@ const CannonAnimation = ({ contributionData, username, isUsingMockData = false }
                         {isDestroyed && (
                           <motion.g>
                             <motion.circle
-                              cx={weekIndex * 12 + 6}
-                              cy={dayIndex * 12 + 6}
+                              cx={weekIndex * 16 + 8}
+                              cy={dayIndex * 16 + 8}
                               r={0}
                               fill="#ff6b35"
                               opacity={0.8}

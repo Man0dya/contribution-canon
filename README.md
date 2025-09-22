@@ -1,229 +1,270 @@
 # 🎯 Contribution Canon
 
-Transform your GitHub contribution graph into an epic cannon animation! Watch as cannons blast through your commits in spectacular fashion.
+Transform your GitHub contribution graph into an epic animated display! Watch as your contributions pop and explode with spectacular effects, creating a dynamic visualization perfect for your README.
 
 ![Contribution Canon Demo](./public/demo.gif)
 
-## ✨ Features
+---
 
-- 🎯 **Precision Targeting** - Auto-popping contribution boxes with explosion effects
-- ⚡ **Smooth Animations** - Optimized SVG animations for all devices  
-- 🤖 **GitHub Actions Automation** - Auto-generates like Snake animation
-- 🎨 **Multiple Themes** - Choose from various color schemes
-- 📐 **Custom Sizes** - Small, medium, or large animations
-- 🚀 **Easy Integration** - One-click setup for automated updates
-- 📱 **Responsive Design** - Beautiful UI that works everywhere
-- 🔄 **Auto-Loop** - Continuous animation cycles
-- ⚙️ **Customizable Speed** - Adjust animation timing
-- 📊 **Real Data** - Uses actual GitHub contribution statistics
+## � For Users
 
-## 🚀 Quick Start
+### 🚀 Quick Setup (2 Minutes)
 
-### Option 1: Automated Animation (Recommended) 
-**Just like the Snake Animation!**
+#### Method 1: Automated Animation (Recommended)
+**Just like the GitHub Snake animation - set it and forget it!**
 
-1. Copy the automation files to your repository:
+1. **Copy automation files to your repository:**
    ```bash
-   # Add these files to your repo
-   .github/workflows/generate-animation.yml
-   scripts/generate-svg.cjs
+   curl -L https://raw.githubusercontent.com/Man0dya/contribution-canon/main/.github/workflows/generate-animation.yml -o .github/workflows/generate-animation.yml
+   curl -L https://raw.githubusercontent.com/Man0dya/contribution-canon/main/scripts/generate-svg.cjs -o scripts/generate-svg.cjs
    ```
 
-2. Add this line to your README.md:
+2. **Add this line to your README.md:**
    ```markdown
    ![Contribution Animation](github-contribution-animation.svg)
    ```
 
-3. Push to your repository - the animation generates automatically!
-   - ✅ Updates daily with your latest contributions
-   - ✅ Zero maintenance required
-   - ✅ Uses real GitHub API data
+3. **Commit and push:**
+   ```bash
+   git add .
+   git commit -m "Add automated contribution animation"
+   git push
+   ```
 
-### Option 2: Manual Generation
+**✨ That's it!** Your animation will:
+- 🔄 Generate automatically every day at midnight UTC
+- 📊 Use your real GitHub contribution data
+- 🎯 Update whenever you push new code
+- ⚡ Require zero maintenance
 
-1. Visit [Contribution Canon](https://man0dya.github.io/contribution-canon)
+#### Method 2: Manual Generation
+
+1. Visit **[Contribution Canon Website](https://man0dya.github.io/contribution-canon)**
 2. Enter your GitHub username
-3. Customize your cannon theme and settings
-4. Download the SVG file
-5. Add to your repository and reference in README
-6. Watch your contributions get blasted! 💥
+3. Customize your animation (theme, size, speed)
+4. Click **"Download SVG"**
+5. Save the file in your repository as `contribution-animation.svg`
+6. Add to your README:
+   ```markdown
+   ![My Contribution Animation](contribution-animation.svg)
+   ```
 
-## 🤖 GitHub Actions Automation
+### 🎨 Customization Options
 
-This project now includes **full automation** just like the popular Snake animation!
+- **Themes**: Default, GitHub, Ocean, Sunset
+- **Sizes**: Small (600×150), Medium (800×200), Large (1000×250)  
+- **Animation Speed**: Slow, Normal, Fast
+- **Real-time Preview**: See changes instantly
 
-### How it works:
-- 📅 **Runs daily** at 00:00 UTC + on every push
-- 🔄 **Fetches real data** from GitHub API  
-- 🎨 **Generates animated SVG** with your contributions
-- 📝 **Auto-commits** the updated file to your repo
-- ⚡ **Zero maintenance** - completely hands-off!
+### 📱 Where to Use
 
-### Setup (30 seconds):
-```bash
-# 1. Copy automation files
-curl -O https://raw.githubusercontent.com/Man0dya/contribution-canon/main/.github/workflows/generate-animation.yml
-mkdir -p .github/workflows && mv generate-animation.yml .github/workflows/
+- ✅ GitHub Profile README
+- ✅ Repository documentation
+- ✅ Personal websites
+- ✅ Portfolio projects
+- ✅ Social media profiles
 
-curl -O https://raw.githubusercontent.com/Man0dya/contribution-canon/main/scripts/generate-svg.cjs  
-mkdir -p scripts && mv generate-svg.cjs scripts/
+### 🔧 Troubleshooting
 
-# 2. Add to README.md
-echo "![Contribution Animation](github-contribution-animation.svg)" >> README.md
+**Animation not showing?**
+- Ensure the SVG file is committed to your repository
+- Check that the file path in your markdown is correct
+- Verify your GitHub username is spelled correctly
 
-# 3. Commit and push
-git add . && git commit -m "Add automated contribution animation" && git push
-```
-
-**That's it!** Your animation will generate automatically and stay updated forever.
-
-### 📁 Generated Files:
-- `github-contribution-animation.svg` - Your personal animated contribution graph
-- Updates automatically with your latest activity
-- Perfect for README profiles, documentation, etc.
-
-## 🎨 Themes Available
-
-- **Default** - Popping contribution boxes with explosion effects
-- **GitHub** - Green contribution colors matching GitHub's theme  
-- **Ocean** - Blue ocean theme with orange accents
-- **Sunset** - Warm red and yellow sunset colors
-
-## 🛠️ For Developers
-
-### Local Development
-
-```bash
-# Clone the repository
-git clone https://github.com/Man0dya/contribution-canon.git
-cd contribution-canon
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-### Build for Production
-
-```bash
-# Build the project
-npm run build
-
-# Deploy to GitHub Pages
-npm run deploy
-```
-
-### Tech Stack
-
-- **Frontend**: React 18 + Vite
-- **Styling**: Tailwind CSS
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Deployment**: GitHub Pages
-
-### Project Structure
-
-```
-src/
-├── components/
-│   ├── Hero.jsx              # Landing page hero section
-│   ├── UsernameForm.jsx      # GitHub username input form
-│   ├── CannonAnimation.jsx   # Main animation component
-│   ├── CodeGenerator.jsx     # SVG and markdown generator
-│   └── Footer.jsx            # Footer with links
-├── utils/
-│   └── github.js             # GitHub API utilities
-├── App.jsx                   # Main application component
-├── main.jsx                  # React entry point
-└── index.css                 # Global styles and Tailwind
-```
-
-## 🔧 Configuration
-
-### Environment Variables
-
-Create a `.env` file for custom configuration:
-
-```env
-VITE_GITHUB_TOKEN=your_github_token  # Optional: for higher API limits
-VITE_BASE_URL=your_custom_domain     # Optional: for custom deployment
-```
-
-### Customization
-
-You can modify themes, add new animation patterns, or customize the cannon design by editing:
-
-- `src/components/CannonAnimation.jsx` - Animation logic
-- `src/components/CodeGenerator.jsx` - Theme definitions
-- `src/index.css` - Global styles and animations
-
-## 📊 API Reference
-
-### GitHub Data Fetching
-
-The app uses GitHub's public contribution data. For higher rate limits, you can optionally provide a GitHub token.
-
-### SVG Generation
-
-Generated SVGs are self-contained with embedded CSS animations and can be used in:
-
-- GitHub README files
-- Documentation sites
-- Personal websites
-- Social media profiles
-
-## 🤝 Contributing
-
-Contributions are welcome! Here's how you can help:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Ideas for Contributions
-
-- New cannon themes and animations
-- Different projectile types (rockets, lasers, etc.)
-- Sound effects (optional toggle)
-- More GitHub integrations (stars, commits, etc.)
-- Performance optimizations
-- Accessibility improvements
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Inspired by the original [GitHub Snake](https://github.com/Platane/snk) animation
-- GitHub for providing the contribution graph data
-- The amazing React and Vite communities
-- All the developers who make open source possible
-
-## 🐛 Bug Reports & Feature Requests
-
-Found a bug or have an idea for a new feature? Please [open an issue](https://github.com/Man0dya/contribution-canon/issues) with:
-
-- Clear description of the issue/feature
-- Steps to reproduce (for bugs)
-- Expected vs actual behavior
-- Screenshots if applicable
-
-## ⭐ Show Your Support
-
-If you found this project helpful, please consider:
-
-- ⭐ Starring this repository
-- 🔄 Sharing it with other developers
-- 🐛 Reporting bugs or suggesting improvements
-- ☕ [Buying me a coffee](https://buymeacoffee.com/man0dya)
+**Animation not updating?**
+- The automation runs daily - check back after 24 hours
+- Ensure the workflow file has proper permissions
+- Check the Actions tab in your repository for any errors
 
 ---
 
-**Made with ❤️ for the developer community**
+## 👩‍� For Developers
 
-Transform your GitHub profile with an epic contribution cannon today! 🎯💥
+### 🛠️ Local Development Setup
+
+1. **Clone and install:**
+   ```bash
+   git clone https://github.com/Man0dya/contribution-canon.git
+   cd contribution-canon
+   npm install
+   ```
+
+2. **Start development server:**
+   ```bash
+   npm run dev
+   ```
+   Visit `http://localhost:5173` to see the app running locally.
+
+3. **Build for production:**
+   ```bash
+   npm run build
+   npm run preview  # Test production build locally
+   ```
+
+### 🏗️ Project Architecture
+
+```
+contribution-canon/
+├── .github/workflows/
+│   └── generate-animation.yml    # GitHub Actions automation
+├── scripts/
+│   └── generate-svg.cjs          # SVG generation script  
+├── src/
+│   ├── components/
+│   │   ├── Header.jsx            # Site header
+│   │   ├── UsernameForm.jsx      # Username input form
+│   │   ├── CannonAnimation.jsx   # Main animation component
+│   │   ├── CodeGenerator.jsx     # SVG generator & customization
+│   │   └── Footer.jsx            # Site footer
+│   ├── utils/
+│   │   └── github.js             # GitHub API utilities
+│   ├── App.jsx                   # Root component
+│   ├── main.jsx                  # React entry point
+│   └── index.css                 # Global styles
+├── public/                       # Static assets
+├── package.json                  # Dependencies & scripts
+└── README.md                     # This file
+```
+
+### 🧰 Tech Stack
+
+- **Frontend Framework**: React 18 + Vite
+- **Styling**: Tailwind CSS + Custom CSS animations
+- **Animations**: Framer Motion for UI, CSS for SVG
+- **Icons**: Lucide React
+- **API**: GitHub GraphQL API
+- **Deployment**: GitHub Pages
+- **Automation**: GitHub Actions + Node.js
+
+### 🔧 Environment Setup
+
+Create `.env` file for development:
+```env
+VITE_GITHUB_TOKEN=ghp_your_token_here  # Optional: Higher API limits
+VITE_BASE_URL=http://localhost:5173    # Development URL
+```
+
+### 🚀 Deployment
+
+**GitHub Pages (Automatic):**
+```bash
+npm run deploy
+```
+
+**Manual deployment:**
+```bash
+npm run build
+# Upload dist/ folder to your hosting provider
+```
+
+### 🤝 Contributing
+
+We welcome contributions! Here's how to get started:
+
+#### � Bug Reports
+1. Check [existing issues](https://github.com/Man0dya/contribution-canon/issues)
+2. Create detailed issue with:
+   - Steps to reproduce
+   - Expected vs actual behavior  
+   - Screenshots/videos if applicable
+   - Environment details (browser, OS)
+
+#### ✨ Feature Requests
+1. Open an issue with the `enhancement` label
+2. Describe the feature and its use case
+3. Include mockups or examples if possible
+
+#### 🔄 Pull Request Process
+1. **Fork the repository**
+2. **Create feature branch:**
+   ```bash
+   git checkout -b feature/amazing-new-feature
+   ```
+3. **Make your changes:**
+   - Follow existing code style
+   - Add comments for complex logic
+   - Update documentation if needed
+4. **Test thoroughly:**
+   ```bash
+   npm run dev    # Test in development
+   npm run build  # Ensure production build works
+   ```
+5. **Commit with clear messages:**
+   ```bash
+   git commit -m "feat: add new animation theme"
+   ```
+6. **Push and create Pull Request:**
+   ```bash
+   git push origin feature/amazing-new-feature
+   ```
+
+#### 💡 Contribution Ideas
+
+**Easy (Good First Issues):**
+- Add new color themes
+- Improve error messages
+- Add loading animations
+- Enhance mobile responsiveness
+
+**Medium:**
+- Add new animation patterns
+- Implement sound effects (toggleable)
+- Add GitHub stats integration
+- Create animation presets
+
+**Advanced:**
+- Performance optimizations
+- Advanced SVG animations
+- Custom animation editor
+- Real-time collaboration features
+
+### 📊 Development Scripts
+
+```bash
+npm run dev        # Start development server
+npm run build      # Build for production
+npm run preview    # Preview production build
+npm run deploy     # Deploy to GitHub Pages
+npm run lint       # Run ESLint
+npm run format     # Format code with Prettier
+```
+
+### 🔍 Code Style Guidelines
+
+- Use **functional components** with hooks
+- Follow **ESLint** and **Prettier** configurations
+- Write **descriptive commit messages** (conventional commits)
+- Add **JSDoc comments** for complex functions
+- Use **TypeScript** for new features (migration in progress)
+
+### 🧪 Testing
+
+Currently using manual testing. Contributions welcome for:
+- Unit tests (Jest + React Testing Library)
+- Integration tests
+- E2E tests (Playwright/Cypress)
+- Visual regression tests
+
+---
+
+## � License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Inspired by [GitHub Snake](https://github.com/Platane/snk) by @Platane
+- GitHub for providing contribution data via their API
+- The React and Vite communities for excellent tooling
+- All contributors who help improve this project
+
+## 🆘 Support
+
+- 📖 **Documentation**: Check this README and inline code comments
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/Man0dya/contribution-canon/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/Man0dya/contribution-canon/discussions)
+- ⭐ **Show Support**: Star the repository if you find it useful!
+
+---
+
+**Transform your GitHub profile today! 🎯✨**

@@ -267,7 +267,7 @@ Steps to add to your README:
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
-              className="card space-y-6"
+              className="card space-y-6 min-h-[600px]"
             >
               <div className="flex items-center space-x-3 mb-6">
                 <Settings className="w-6 h-6 text-blue-500" />
@@ -351,7 +351,7 @@ Steps to add to your README:
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
               viewport={{ once: true }}
-              className="card space-y-6"
+              className="card space-y-6 min-h-[600px]"
             >
               <div className="flex items-center space-x-3 mb-6">
                 <Code className="w-6 h-6 text-green-500" />
@@ -403,21 +403,7 @@ Steps to add to your README:
                   </div>
                 </div>
 
-                {/* Preview */}
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h4 className="text-gray-800 font-semibold mb-3">Preview:</h4>
-                  <div 
-                    className="w-full h-32 rounded border border-gray-200 flex items-center justify-center"
-                    style={{ 
-                      backgroundColor: themes[selectedTheme].background || '#f8f9fa',
-                      backgroundImage: `linear-gradient(45deg, ${themes[selectedTheme].cannon}22 25%, transparent 25%), linear-gradient(-45deg, ${themes[selectedTheme].cannon}22 25%, transparent 25%)`
-                    }}
-                  >
-                    <span className="text-gray-600 text-sm">
-                      {username}'s Contribution Cannon Preview
-                    </span>
-                  </div>
-                </div>
+
               </div>
             </motion.div>
           </div>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Header from './components/Header'
 import UsernameForm from './components/UsernameForm'
 import CannonAnimation from './components/CannonAnimation'
 import CodeGenerator from './components/CodeGenerator'
@@ -70,7 +71,9 @@ function App() {
 
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
+      <Header />
+      
       {/* Main content */}
       <div className="relative">
         <main className="container mx-auto px-4 py-8 space-y-8">

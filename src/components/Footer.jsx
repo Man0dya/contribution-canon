@@ -4,17 +4,17 @@ import { Github, Heart, Star, Coffee } from 'lucide-react'
 
 const Footer = () => {
   return (
-    <footer className="py-16 border-t border-gray-200 bg-gray-50">
+    <footer className="py-8 border-t border-gray-200 bg-white">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center space-y-8"
+          className="text-center space-y-6"
         >
           {/* Main footer content */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -84,10 +84,10 @@ const Footer = () => {
               className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto"
             >
               <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-xl">
-                <div className="text-2xl mb-3">🎯</div>
+                <div className="text-2xl mb-3">⚡</div>
                 <h4 className="font-semibold text-gray-800 mb-2">Precise Animations</h4>
                 <p className="text-gray-600 text-sm">
-                  Every cannon shot targets your actual contribution data with pixel-perfect accuracy
+                  Every shot targets your actual contribution data with pixel-perfect accuracy
                 </p>
               </div>
 
@@ -117,19 +117,10 @@ const Footer = () => {
             viewport={{ once: true }}
             className="pt-8 border-t border-gray-200 space-y-4"
           >
-            <div className="flex items-center justify-center space-x-2 text-gray-600">
-              <span>Made with</span>
-              <motion.div
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 1, repeat: Infinity }}
-              >
-                <Heart className="w-4 h-4 text-red-400" />
-              </motion.div>
-              <span>for the developer community</span>
-            </div>
+
 
             <div className="flex flex-wrap justify-center items-center gap-6 text-gray-500 text-sm">
-              <span>© 2024 Contribution Canon</span>
+              <span>© 2025 Contribution Canon</span>
               <span>•</span>
               <a 
                 href="https://github.com/yourusername/contribution-canon/blob/main/LICENSE" 
@@ -181,28 +172,7 @@ const Footer = () => {
             </motion.div>
           </motion.div>
 
-          {/* Animated signature */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 1.2 }}
-            viewport={{ once: true }}
-            className="pt-4"
-          >
-            <motion.div
-              animate={{ 
-                rotate: [0, 5, -5, 0],
-              }}
-              transition={{ 
-                duration: 4, 
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              className="inline-block text-2xl"
-            >
-              🎯
-            </motion.div>
-          </motion.div>
+
         </motion.div>
       </div>
     </footer>
