@@ -11,10 +11,11 @@
     "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "axios": "^1.12.2",
+    "framer-motion": "^10.16.4",
     "lucide-react": "^0.263.1",
-    "framer-motion": "^10.16.4"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
