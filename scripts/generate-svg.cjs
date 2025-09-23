@@ -10,8 +10,16 @@ const https = require('https');
 
 // Get username from repository owner
 const username = process.env.GITHUB_REPOSITORY?.split('/')[0] || 'Man0dya';
+const githubToken = process.env.GITHUB_TOKEN;
 
 console.log(`🎯 Generating contribution animation for: ${username}`);
+console.log(`📦 Repository: ${process.env.GITHUB_REPOSITORY || 'Not set'}`);
+console.log(`🔑 Token available: ${githubToken ? 'Yes' : 'No'}`);
+
+if (!githubToken) {
+  console.error('❌ GITHUB_TOKEN is required but not provided');
+  process.exit(1);
+}
 
 /**
  * Fetch contribution data from GitHub API
@@ -48,10 +56,11 @@ async function fetchContributionData(username) {
       path: '/graphql',
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`,
+        'Authorization': `Bearer ${githubToken}`,
         'Content-Type': 'application/json',
         'Content-Length': Buffer.byteLength(postData),
-        'User-Agent': 'contribution-canon-generator'
+        'User-Agent': 'contribution-canon-generator',
+        'Accept': 'application/vnd.github.v4+json'
       }
     };
 
@@ -64,12 +73,26 @@ async function fetchContributionData(username) {
       
       res.on('end', () => {
         try {
+          console.log(`📡 API Response Status: ${res.statusCode}`);
+          console.log(`📄 Response headers: ${JSON.stringify(res.headers)}`);
+          
           const response = JSON.parse(data);
+          console.log(`📋 Response data keys: ${Object.keys(response)}`);
+          
           if (response.errors) {
+            console.error('❌ GraphQL Errors:', JSON.stringify(response.errors, null, 2));
             throw new Error(`GraphQL Error: ${JSON.stringify(response.errors)}`);
           }
+          
+          if (!response.data?.user?.contributionsCollection?.contributionCalendar?.weeks) {
+            console.error('❌ Unexpected response structure:', JSON.stringify(response, null, 2));
+            throw new Error('Invalid response structure from GitHub API');
+          }
+          
           resolve(response.data.user.contributionsCollection.contributionCalendar.weeks);
         } catch (error) {
+          console.error('❌ Error parsing response:', error.message);
+          console.error('📄 Raw response:', data);
           reject(error);
         }
       });
