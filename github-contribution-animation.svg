@@ -5,7 +5,7 @@
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; 
       }
       .contribution-cell-animated { 
-        animation: pop-sequence 45.6s infinite linear;
+        animation: pop-sequence 46.199999999999996s infinite linear;
         transform-origin: center;
       }
       
@@ -37,7 +37,7 @@
       }
       
       .explosion-particle {
-        animation: explode 45.6s infinite linear;
+        animation: explode 46.199999999999996s infinite linear;
       }
       
       @keyframes explode {
@@ -60,7 +60,7 @@
   
   <!-- Subtitle -->
   <text x="20" y="45" font-family="sans-serif" font-size="12" fill="#656d76">
-    76 contributions this year • Updates daily
+    77 contributions this year • Updates daily
   </text>
   
   <!-- Main Grid Container -->
@@ -250,15 +250,15 @@
     <rect x="287" y="1" width="9" height="9" rx="2" fill="#ebedf0"/>
     <rect x="287" y="12" width="9" height="9" rx="2" fill="#ebedf0"/>
     <rect x="287" y="23" width="9" height="9" rx="2" fill="#9be9a8"/>
-    <rect x="287" y="34" width="9" height="9" rx="2" fill="#40c463"/>
+    <rect x="287" y="34" width="9" height="9" rx="2" fill="#30a14e"/>
     <rect x="287" y="45" width="9" height="9" rx="2" fill="#40c463"/>
     <rect x="287" y="56" width="9" height="9" rx="2" fill="#9be9a8"/>
     <rect x="287" y="67" width="9" height="9" rx="2" fill="#9be9a8"/>
     <rect x="298" y="1" width="9" height="9" rx="2" fill="#9be9a8"/>
     <rect x="298" y="12" width="9" height="9" rx="2" fill="#9be9a8"/>
     <rect x="298" y="23" width="9" height="9" rx="2" fill="#9be9a8"/>
-    <rect x="298" y="34" width="9" height="9" rx="2" fill="#9be9a8"/>
-    <rect x="298" y="45" width="9" height="9" rx="2" fill="#9be9a8"/>
+    <rect x="298" y="34" width="9" height="9" rx="2" fill="#40c463"/>
+    <rect x="298" y="45" width="9" height="9" rx="2" fill="#40c463"/>
     <rect x="298" y="56" width="9" height="9" rx="2" fill="#ebedf0"/>
     <rect x="298" y="67" width="9" height="9" rx="2" fill="#ebedf0"/>
     <rect x="309" y="1" width="9" height="9" rx="2" fill="#ebedf0"/>
@@ -302,7 +302,7 @@
     <rect x="364" y="34" width="9" height="9" rx="2" fill="#9be9a8"/>
     <rect x="364" y="45" width="9" height="9" rx="2" fill="#9be9a8"/>
     <rect x="364" y="56" width="9" height="9" rx="2" fill="#ebedf0"/>
-    <rect x="364" y="67" width="9" height="9" rx="2" fill="#40c463"/>
+    <rect x="364" y="67" width="9" height="9" rx="2" fill="#30a14e"/>
     <rect x="375" y="1" width="9" height="9" rx="2" fill="#ebedf0"/>
     <rect x="375" y="12" width="9" height="9" rx="2" fill="#ebedf0"/>
     <rect x="375" y="23" width="9" height="9" rx="2" fill="#9be9a8"/>
@@ -363,7 +363,7 @@
     <rect x="463" y="12" width="9" height="9" rx="2" fill="#ebedf0"/>
     <rect x="463" y="23" width="9" height="9" rx="2" fill="#ebedf0"/>
     <rect x="463" y="34" width="9" height="9" rx="2" fill="#9be9a8"/>
-    <rect x="463" y="45" width="9" height="9" rx="2" fill="#40c463"/>
+    <rect x="463" y="45" width="9" height="9" rx="2" fill="#30a14e"/>
     <rect x="463" y="56" width="9" height="9" rx="2" fill="#ebedf0"/>
     <rect x="463" y="67" width="9" height="9" rx="2" fill="#9be9a8"/>
     <rect x="474" y="1" width="9" height="9" rx="2" fill="#ebedf0"/>
@@ -392,7 +392,7 @@
     <rect x="507" y="23" width="9" height="9" rx="2" fill="#ebedf0"/>
     <rect x="507" y="34" width="9" height="9" rx="2" fill="#9be9a8"/>
     <rect x="507" y="45" width="9" height="9" rx="2" fill="#40c463"/>
-    <rect x="507" y="56" width="9" height="9" rx="2" fill="#9be9a8"/>
+    <rect x="507" y="56" width="9" height="9" rx="2" fill="#40c463"/>
     <rect x="507" y="67" width="9" height="9" rx="2" fill="#9be9a8"/>
     <rect x="518" y="1" width="9" height="9" rx="2" fill="#40c463"/>
     <rect x="518" y="12" width="9" height="9" rx="2" fill="#9be9a8"/>
@@ -404,36 +404,37 @@
     <rect x="529" y="1" width="9" height="9" rx="2" fill="#9be9a8"/>
     <rect x="529" y="12" width="9" height="9" rx="2" fill="#40c463"/>
     <rect x="529" y="23" width="9" height="9" rx="2" fill="#216e39"/>
-    <rect x="529" y="34" width="9" height="9" rx="2" fill="#30a14e"/>
-    <rect x="529" y="45" width="9" height="9" rx="2" fill="#30a14e"/>
-    <rect x="529" y="56" width="9" height="9" rx="2" fill="#40c463"/>
+    <rect x="529" y="34" width="9" height="9" rx="2" fill="#216e39"/>
+    <rect x="529" y="45" width="9" height="9" rx="2" fill="#216e39"/>
+    <rect x="529" y="56" width="9" height="9" rx="2" fill="#30a14e"/>
     <rect x="529" y="67" width="9" height="9" rx="2" fill="#40c463"/>
     <rect x="540" y="1" width="9" height="9" rx="2" fill="#9be9a8"/>
     <rect x="540" y="12" width="9" height="9" rx="2" fill="#9be9a8"/>
-    <rect x="540" y="23" width="9" height="9" rx="2" fill="#9be9a8"/>
+    <rect x="540" y="23" width="9" height="9" rx="2" fill="#40c463"/>
     <rect x="540" y="34" width="9" height="9" rx="2" fill="#9be9a8"/>
     <rect x="540" y="45" width="9" height="9" rx="2" fill="#9be9a8"/>
-    <rect x="540" y="56" width="9" height="9" rx="2" fill="#40c463"/>
+    <rect x="540" y="56" width="9" height="9" rx="2" fill="#30a14e"/>
     <rect x="540" y="67" width="9" height="9" rx="2" fill="#9be9a8"/>
-    <rect x="551" y="1" width="9" height="9" rx="2" fill="#9be9a8"/>
+    <rect x="551" y="1" width="9" height="9" rx="2" fill="#40c463"/>
     <rect x="551" y="12" width="9" height="9" rx="2" fill="#9be9a8"/>
-    <rect x="551" y="23" width="9" height="9" rx="2" fill="#40c463"/>
-    <rect x="551" y="34" width="9" height="9" rx="2" fill="#9be9a8"/>
+    <rect x="551" y="23" width="9" height="9" rx="2" fill="#30a14e"/>
+    <rect x="551" y="34" width="9" height="9" rx="2" fill="#40c463"/>
     <rect x="551" y="45" width="9" height="9" rx="2" fill="#9be9a8"/>
-    <rect x="551" y="56" width="9" height="9" rx="2" fill="#9be9a8"/>
+    <rect x="551" y="56" width="9" height="9" rx="2" fill="#40c463"/>
     <rect x="551" y="67" width="9" height="9" rx="2" fill="#9be9a8"/>
     <rect x="562" y="1" width="9" height="9" rx="2" fill="#9be9a8"/>
-    <rect x="562" y="12" width="9" height="9" rx="2" fill="#9be9a8"/>
+    <rect x="562" y="12" width="9" height="9" rx="2" fill="#40c463"/>
     <rect x="562" y="23" width="9" height="9" rx="2" fill="#9be9a8"/>
     <rect x="562" y="34" width="9" height="9" rx="2" fill="#216e39"/>
     <rect x="562" y="45" width="9" height="9" rx="2" fill="#30a14e"/>
-    <rect x="562" y="56" width="9" height="9" rx="2" fill="#40c463"/>
-    <rect x="562" y="67" width="9" height="9" rx="2" fill="#30a14e"/>
-    <rect x="573" y="1" width="9" height="9" rx="2" fill="#9be9a8"/>
+    <rect x="562" y="56" width="9" height="9" rx="2" fill="#30a14e"/>
+    <rect x="562" y="67" width="9" height="9" rx="2" fill="#216e39"/>
+    <rect x="573" y="1" width="9" height="9" rx="2" fill="#40c463"/>
     <rect x="573" y="12" width="9" height="9" rx="2" fill="#9be9a8"/>
     <rect x="573" y="23" width="9" height="9" rx="2" fill="#9be9a8"/>
     <rect x="573" y="34" width="9" height="9" rx="2" fill="#9be9a8"/>
-    <rect x="573" y="45" width="9" height="9" rx="2" fill="#9be9a8"/>
+    <rect x="573" y="45" width="9" height="9" rx="2" fill="#40c463"/>
+    <rect x="573" y="56" width="9" height="9" rx="2" fill="#30a14e"/>
 
         <rect class="contribution-cell-animated" 
       x="232" y="34" 
@@ -510,7 +511,7 @@
     <rect class="contribution-cell-animated" 
       x="287" y="34" 
       width="9" height="9" rx="2" 
-      fill="#40c463"
+      fill="#30a14e"
       style="animation-delay: 0.96s;">
     </rect>
     <circle class="explosion-particle" 
@@ -762,7 +763,7 @@
     <rect class="contribution-cell-animated" 
       x="298" y="34" 
       width="9" height="9" rx="2" 
-      fill="#9be9a8"
+      fill="#40c463"
       style="animation-delay: 4.32s;">
     </rect>
     <circle class="explosion-particle" 
@@ -798,7 +799,7 @@
     <rect class="contribution-cell-animated" 
       x="298" y="45" 
       width="9" height="9" rx="2" 
-      fill="#9be9a8"
+      fill="#40c463"
       style="animation-delay: 4.80s;">
     </rect>
     <circle class="explosion-particle" 
@@ -1158,7 +1159,7 @@
     <rect class="contribution-cell-animated" 
       x="364" y="67" 
       width="9" height="9" rx="2" 
-      fill="#40c463"
+      fill="#30a14e"
       style="animation-delay: 9.60s;">
     </rect>
     <circle class="explosion-particle" 
@@ -1410,7 +1411,7 @@
     <rect class="contribution-cell-animated" 
       x="463" y="45" 
       width="9" height="9" rx="2" 
-      fill="#40c463"
+      fill="#30a14e"
       style="animation-delay: 12.96s;">
     </rect>
     <circle class="explosion-particle" 
@@ -1662,7 +1663,7 @@
     <rect class="contribution-cell-animated" 
       x="507" y="56" 
       width="9" height="9" rx="2" 
-      fill="#9be9a8"
+      fill="#40c463"
       style="animation-delay: 16.32s;">
     </rect>
     <circle class="explosion-particle" 
@@ -2094,7 +2095,7 @@
     <rect class="contribution-cell-animated" 
       x="529" y="34" 
       width="9" height="9" rx="2" 
-      fill="#30a14e"
+      fill="#216e39"
       style="animation-delay: 22.08s;">
     </rect>
     <circle class="explosion-particle" 
@@ -2130,7 +2131,7 @@
     <rect class="contribution-cell-animated" 
       x="529" y="45" 
       width="9" height="9" rx="2" 
-      fill="#30a14e"
+      fill="#216e39"
       style="animation-delay: 22.56s;">
     </rect>
     <circle class="explosion-particle" 
@@ -2166,7 +2167,7 @@
     <rect class="contribution-cell-animated" 
       x="529" y="56" 
       width="9" height="9" rx="2" 
-      fill="#40c463"
+      fill="#30a14e"
       style="animation-delay: 23.04s;">
     </rect>
     <circle class="explosion-particle" 
@@ -2310,7 +2311,7 @@
     <rect class="contribution-cell-animated" 
       x="540" y="23" 
       width="9" height="9" rx="2" 
-      fill="#9be9a8"
+      fill="#40c463"
       style="animation-delay: 24.96s;">
     </rect>
     <circle class="explosion-particle" 
@@ -2418,7 +2419,7 @@
     <rect class="contribution-cell-animated" 
       x="540" y="56" 
       width="9" height="9" rx="2" 
-      fill="#40c463"
+      fill="#30a14e"
       style="animation-delay: 26.40s;">
     </rect>
     <circle class="explosion-particle" 
@@ -2490,7 +2491,7 @@
     <rect class="contribution-cell-animated" 
       x="551" y="1" 
       width="9" height="9" rx="2" 
-      fill="#9be9a8"
+      fill="#40c463"
       style="animation-delay: 27.36s;">
     </rect>
     <circle class="explosion-particle" 
@@ -2562,7 +2563,7 @@
     <rect class="contribution-cell-animated" 
       x="551" y="23" 
       width="9" height="9" rx="2" 
-      fill="#40c463"
+      fill="#30a14e"
       style="animation-delay: 28.32s;">
     </rect>
     <circle class="explosion-particle" 
@@ -2598,7 +2599,7 @@
     <rect class="contribution-cell-animated" 
       x="551" y="34" 
       width="9" height="9" rx="2" 
-      fill="#9be9a8"
+      fill="#40c463"
       style="animation-delay: 28.80s;">
     </rect>
     <circle class="explosion-particle" 
@@ -2670,7 +2671,7 @@
     <rect class="contribution-cell-animated" 
       x="551" y="56" 
       width="9" height="9" rx="2" 
-      fill="#9be9a8"
+      fill="#40c463"
       style="animation-delay: 29.76s;">
     </rect>
     <circle class="explosion-particle" 
@@ -2778,7 +2779,7 @@
     <rect class="contribution-cell-animated" 
       x="562" y="12" 
       width="9" height="9" rx="2" 
-      fill="#9be9a8"
+      fill="#40c463"
       style="animation-delay: 31.20s;">
     </rect>
     <circle class="explosion-particle" 
@@ -2922,7 +2923,7 @@
     <rect class="contribution-cell-animated" 
       x="562" y="56" 
       width="9" height="9" rx="2" 
-      fill="#40c463"
+      fill="#30a14e"
       style="animation-delay: 33.12s;">
     </rect>
     <circle class="explosion-particle" 
@@ -2958,7 +2959,7 @@
     <rect class="contribution-cell-animated" 
       x="562" y="67" 
       width="9" height="9" rx="2" 
-      fill="#30a14e"
+      fill="#216e39"
       style="animation-delay: 33.60s;">
     </rect>
     <circle class="explosion-particle" 
@@ -2994,7 +2995,7 @@
     <rect class="contribution-cell-animated" 
       x="573" y="1" 
       width="9" height="9" rx="2" 
-      fill="#9be9a8"
+      fill="#40c463"
       style="animation-delay: 34.08s;">
     </rect>
     <circle class="explosion-particle" 
@@ -3138,7 +3139,7 @@
     <rect class="contribution-cell-animated" 
       x="573" y="45" 
       width="9" height="9" rx="2" 
-      fill="#9be9a8"
+      fill="#40c463"
       style="animation-delay: 36.00s;">
     </rect>
     <circle class="explosion-particle" 
@@ -3170,6 +3171,42 @@
         cx="577.5" cy="49.5" r="1.5" 
         fill="#ffd700" opacity="0"
         style="--dx: 0px; --dy: 10px; animation-delay: 36.00s;">
+      </circle>
+    <rect class="contribution-cell-animated" 
+      x="573" y="56" 
+      width="9" height="9" rx="2" 
+      fill="#30a14e"
+      style="animation-delay: 36.48s;">
+    </rect>
+    <circle class="explosion-particle" 
+        cx="577.5" cy="60.5" r="1.5" 
+        fill="#ffd700" opacity="0"
+        style="--dx: -8px; --dy: -8px; animation-delay: 36.48s;">
+      </circle>
+    <circle class="explosion-particle" 
+        cx="577.5" cy="60.5" r="1.5" 
+        fill="#ffd700" opacity="0"
+        style="--dx: 8px; --dy: -8px; animation-delay: 36.48s;">
+      </circle>
+    <circle class="explosion-particle" 
+        cx="577.5" cy="60.5" r="1.5" 
+        fill="#ffd700" opacity="0"
+        style="--dx: -8px; --dy: 8px; animation-delay: 36.48s;">
+      </circle>
+    <circle class="explosion-particle" 
+        cx="577.5" cy="60.5" r="1.5" 
+        fill="#ffd700" opacity="0"
+        style="--dx: 8px; --dy: 8px; animation-delay: 36.48s;">
+      </circle>
+    <circle class="explosion-particle" 
+        cx="577.5" cy="60.5" r="1.5" 
+        fill="#ffd700" opacity="0"
+        style="--dx: 0px; --dy: -10px; animation-delay: 36.48s;">
+      </circle>
+    <circle class="explosion-particle" 
+        cx="577.5" cy="60.5" r="1.5" 
+        fill="#ffd700" opacity="0"
+        style="--dx: 0px; --dy: 10px; animation-delay: 36.48s;">
       </circle>
 
   </g>
