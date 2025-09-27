@@ -8,7 +8,6 @@ const CodeGenerator = ({ username, contributionData }) => {
   const [animationSpeed, setAnimationSpeed] = useState('normal')
   const [noContributionColor, setNoContributionColor] = useState('#ebedf0')
   const [hideZeroDays, setHideZeroDays] = useState(false)
-  const [transparentBg, setTransparentBg] = useState(true)
   const [animatedFileName, setAnimatedFileName] = useState(`${username}-contribution-animation.svg`)
   const [staticFileName, setStaticFileName] = useState(`${username}-contributions.svg`)
 
@@ -68,7 +67,7 @@ const CodeGenerator = ({ username, contributionData }) => {
       height: defaultViewBox.height,
       theme,
       speedMul,
-      transparent: transparentBg
+      transparent: true
     })
   }
 
@@ -85,19 +84,21 @@ const CodeGenerator = ({ username, contributionData }) => {
 
   // Build Bubble Shooter style SVG string using SMIL animations
   const buildBubbleShooterSVG = ({ username, data, width, height, theme, speedMul, transparent = false }) => {
-    const margin = { left: 20, top: 40, right: 20, bottom: 30 }
+    // Tight layout to match static graph: no outer margins; viewBox fits grid + shooter only
+    const margin = { left: 0, top: 0, right: 0, bottom: 0 }
     const weeks = data.length
     const days = 7
-    // Revert bubble sizing cap
-    const cell = Math.max(10, Math.min(14, Math.floor((width - margin.left - margin.right) / Math.max(30, weeks))))
+    // Match static graph sizing logic
+    const cell = Math.max(10, Math.min(14, Math.floor(width / Math.max(30, weeks))))
     const radius = Math.floor(cell * 0.45)
     const gridW = weeks * cell
     const gridH = days * cell
-    const originX = margin.left + (width - margin.left - margin.right - gridW) / 2
-    const originY = margin.top
+    const originX = 0
+    const originY = 0
 
     const shooterX = originX + gridW / 2
-    const shooterY = originY + gridH + 26
+    const shooterYOffset = 26
+    const shooterY = originY + gridH + shooterYOffset
 
     // Build list of bubbles with positions (centers)
     const bubbles = []
@@ -169,9 +170,11 @@ const CodeGenerator = ({ username, contributionData }) => {
       }
     })
 
-    // Build final SVG (legend removed)
-    const bgRect = transparent ? '' : `\n  <rect width="100%" height="100%" fill="${theme.background}" rx="8"/>`
-    return `<?xml version="1.0" encoding="UTF-8"?>\n<svg width="100%" viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\n  <defs>\n    <style>\n      .title { font: 600 16px/1.2 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif; fill: #111; }\n      .meta { font: 12px sans-serif; fill: #666; }\n    </style>\n  </defs>\n${bgRect}\n  <text class="title" x="${margin.left}" y="24">${username}'s Bubble Shooter Contributions</text>\n\n  <!-- cycle timer to orchestrate begin/end and restart -->\n  <rect id="cycleTimer" x="-10" y="-10" width="1" height="1" fill="none">\n    <animate id="cycle" attributeName="x" from="-10" to="-9" begin="0s;cycle.end+1s" dur="${total}s" fill="freeze"/>\n  </rect>\n\n  <!-- ceiling line and shooter base -->\n  <line x1="${originX}" y1="${originY - 6}" x2="${originX + gridW}" y2="${originY - 6}" stroke="#d0d7de"/>\n  <rect x="${shooterX - 16}" y="${shooterY - 10}" width="32" height="10" rx="5" fill="${theme.cannon}" opacity="0.9"/>\n  <polygon points="${shooterX - 5},${shooterY - 10} ${shooterX + 5},${shooterY - 10} ${shooterX},${shooterY - 22}" fill="${theme.cannon}"/>\n\n  <!-- grid of bubbles (top wall) -->\n  ${gridStr}\n\n  <!-- bullets -->\n  ${bulletsStr}\n\n  <!-- pops and particles -->\n  ${popsStr}\n</svg>`
+    // Build final SVG (legend removed) with tight viewBox
+    const bgRect = transparent ? '' : `\n  <rect width=\"100%\" height=\"100%\" fill=\"${theme.background}\" rx=\"8\"/>`
+    const vbW = gridW
+    const vbH = gridH + shooterYOffset
+    return `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg width=\"100%\" viewBox=\"0 0 ${vbW} ${vbH}\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n  <defs>\n    <style>\n      .title { font: 600 16px/1.2 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif; fill: #111; }\n      .meta { font: 12px sans-serif; fill: #666; }\n    </style>\n  </defs>\n${bgRect}\n  <!-- cycle timer to orchestrate begin/end and restart -->\n  <rect id=\"cycleTimer\" x=\"-10\" y=\"-10\" width=\"1\" height=\"1\" fill=\"none\">\n    <animate id=\"cycle\" attributeName=\"x\" from=\"-10\" to=\"-9\" begin=\"0s;cycle.end+1s\" dur=\"${total}s\" fill=\"freeze\"/>\n  </rect>\n\n  <!-- shooter base -->\n  <rect x=\"${shooterX - 16}\" y=\"${shooterY - 10}\" width=\"32\" height=\"10\" rx=\"5\" fill=\"${theme.cannon}\" opacity=\"0.9\"/>\n  <polygon points=\"${shooterX - 5},${shooterY - 10} ${shooterX + 5},${shooterY - 10} ${shooterX},${shooterY - 22}\" fill=\"${theme.cannon}\"/>\n\n  <!-- grid of bubbles (top wall) -->\n  ${gridStr}\n\n  <!-- bullets -->\n  ${bulletsStr}\n\n  <!-- pops and particles -->\n  ${popsStr}\n</svg>`
   }
 
   // Build a static contribution graph (no animation), transparent by default
@@ -223,7 +226,7 @@ const CodeGenerator = ({ username, contributionData }) => {
       height: defaultViewBox.height,
       theme,
       speedMul,
-      transparent: transparentBg
+      transparent: true
     })
     const blob = new Blob([svgContent], { type: 'image/svg+xml' })
     const url = URL.createObjectURL(blob)
@@ -383,17 +386,7 @@ const CodeGenerator = ({ username, contributionData }) => {
                 </select>
               </div>
 
-              {/* Background option */}
-              <div className="mt-3 flex items-center gap-2">
-                <input
-                  id="transparentBg"
-                  type="checkbox"
-                  checked={transparentBg}
-                  onChange={(e) => setTransparentBg(e.target.checked)}
-                  className="rounded border-gray-300"
-                />
-                <label htmlFor="transparentBg" className="text-sm text-gray-700">Transparent background (like snake)</label>
-              </div>
+              {/* Background option removed: animated export is always background-free */}
 
               {/* Filenames & Download Buttons */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
