@@ -143,19 +143,19 @@ const CodeGenerator = ({ username, contributionData }) => {
     prunedTargets.forEach((t, i) => {
       const begin = (i * (tShot + tGap)).toFixed(3)
       const shotId = `shot-${i}`
-  bulletsStr += `\n      <circle cx="${shooterX}" cy="${shooterY}" r="3.5" fill="${theme.cannon}" opacity="0">\n        <set attributeName="opacity" to="1" begin="cycle.begin+${begin}s"/>\n        <animate id="${shotId}" attributeName="cy" from="${shooterY}" to="${t.cy}" begin="cycle.begin+${begin}s" dur="${tShot}s" fill="freeze"/>\n        <animate attributeName="cx" from="${shooterX}" to="${t.cx}" begin="cycle.begin+${begin}s" dur="${tShot}s" fill="freeze"/>\n        <animate attributeName="r" from="3.5" to="0" begin="${shotId}.end" dur="0.04s" fill="freeze"/>\n        <set attributeName="opacity" to="0" begin="${shotId}.end"/>\n      </circle>`
+  bulletsStr += `\n      <circle cx="${shooterX}" cy="${shooterY}" r="3.5" fill="${theme.cannon}" opacity="0">\n        <set attributeName="opacity" to="1" begin="cycle.begin+${begin}s"/>\n        <animate id="${shotId}" attributeName="cy" from="${shooterY}" to="${t.cy}" begin="cycle.begin+${begin}s" dur="${tShot}s" fill="freeze"/>\n        <animate attributeName="cx" from="${shooterX}" to="${t.cx}" begin="cycle.begin+${begin}s" dur="${tShot}s" fill="freeze"/>\n        <set attributeName="opacity" to="0" begin="${shotId}.end"/>\n      </circle>`
 
   // Identify target (kept for reference; color change handled inside bubble via shot index mapping)
 
-  // Explosion ring (short and fades quickly)
-  popsStr += `\n      <circle cx="${t.cx}" cy="${t.cy}" r="${radius}" fill="none" stroke="${theme.explosion}" stroke-width="2" opacity="0">\n        <set attributeName="opacity" to="1" begin="${shotId}.end"/>\n        <animate attributeName="r" from="${radius}" to="${(radius * 1.8).toFixed(2)}" begin="${shotId}.end" dur="0.18s" fill="freeze"/>\n        <animate attributeName="opacity" from="1" to="0" begin="${shotId}.end" dur="0.18s" fill="freeze"/>\n        <set attributeName="visibility" to="hidden" begin="${shotId}.end+0.18s"/>\n      </circle>`
+      // Explosion ring
+      popsStr += `\n      <circle cx="${t.cx}" cy="${t.cy}" r="${radius}" fill="none" stroke="${theme.explosion}" stroke-width="2" opacity="0">\n        <set attributeName="opacity" to="1" begin="${shotId}.end"/>\n        <animate attributeName="r" from="${radius}" to="${(radius * 1.8).toFixed(2)}" begin="${shotId}.end" dur="0.35s" fill="freeze"/>\n        <animate attributeName="opacity" from="1" to="0" begin="${shotId}.end" dur="0.35s" fill="freeze"/>\n      </circle>`
 
       // Particles
       for (let pi = 0; pi < 6; pi++) {
         const ang = (pi * Math.PI) / 3
         const px = (t.cx + Math.cos(ang) * (radius * 1.6)).toFixed(2)
         const py = (t.cy + Math.sin(ang) * (radius * 1.6)).toFixed(2)
-        popsStr += `\n      <circle cx="${t.cx}" cy="${t.cy}" r="1.6" fill="#ffd700" opacity="0">\n        <set attributeName="opacity" to="0" begin="${shotId}.end"/>\n        <animate attributeName="cx" from="${t.cx}" to="${px}" begin="${shotId}.end" dur="0.30s" fill="freeze"/>\n        <animate attributeName="cy" from="${t.cy}" to="${py}" begin="${shotId}.end" dur="0.30s" fill="freeze"/>\n        <animate attributeName="opacity" from="0" to="0.95" begin="${shotId}.end+0.04s" dur="0.06s" fill="freeze"/>\n        <animate attributeName="opacity" from="0.95" to="0" begin="${shotId}.end+0.12s" dur="0.22s" fill="freeze"/>\n        <set attributeName="visibility" to="hidden" begin="${shotId}.end+0.34s"/>\n      </circle>`
+        popsStr += `\n      <circle cx="${t.cx}" cy="${t.cy}" r="1.6" fill="#ffd700" opacity="1">\n        <animate attributeName="cx" from="${t.cx}" to="${px}" begin="${shotId}.end" dur="0.35s" fill="freeze"/>\n        <animate attributeName="cy" from="${t.cy}" to="${py}" begin="${shotId}.end" dur="0.35s" fill="freeze"/>\n        <animate attributeName="opacity" from="1" to="0" begin="${shotId}.end" dur="0.35s" fill="freeze"/>\n      </circle>`
       }
     })
 
