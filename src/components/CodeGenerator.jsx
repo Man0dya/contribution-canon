@@ -165,16 +165,7 @@ const CodeGenerator = ({ username, contributionData }) => {
 
   const generateMarkdownCode = () => {
     const fileName = `${username}-contribution-animation.svg`
-    
-    return `![${username}'s Contribution Animation](${fileName})
-
-<!-- 
-Steps to add to your README:
-1. Click "Download SVG" above
-2. Save the file as "${fileName}" in your repository root
-3. Commit and push the SVG file to your repo
-4. The animation will display in your README!
--->`
+    return `![${username}'s Contribution Animation](${fileName})`
   }
 
   const handleCopy = async () => {
@@ -403,18 +394,17 @@ Steps to add to your README:
 
 
               </div>
-
-              {/* Live Preview */}
-              <div className="space-y-3">
-                <h4 className="text-gray-800 font-semibold">Live Preview</h4>
-                <div className="border border-gray-200 rounded-lg bg-white overflow-auto max-h-[420px] p-3">
-                  <div dangerouslySetInnerHTML={{ __html: generateSvgCode() }} />
-                </div>
-                <p className="text-xs text-gray-500">Preview uses the same SVG you’ll download.</p>
-              </div>
             </motion.div>
           </div>
 
+          {/* Full-width Live Preview below both containers */}
+          <div className="mt-10">
+            <h4 className="text-gray-800 font-semibold mb-3">Live Preview</h4>
+            <div className="border border-gray-200 rounded-lg bg-white p-3 w-full">
+              <div dangerouslySetInnerHTML={{ __html: generateSvgCode() }} />
+            </div>
+            <p className="text-xs text-gray-500 mt-2">Preview uses the same SVG you’ll download.</p>
+          </div>
 
         </motion.div>
       </div>
