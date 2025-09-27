@@ -435,7 +435,7 @@
     <rect x="573" y="34" width="9" height="9" rx="2" fill="#9be9a8"/>
     <rect x="573" y="45" width="9" height="9" rx="2" fill="#40c463"/>
     <rect x="573" y="56" width="9" height="9" rx="2" fill="#216e39"/>
-    <rect x="573" y="67" width="9" height="9" rx="2" fill="#9be9a8"/>
+    <rect x="573" y="67" width="9" height="9" rx="2" fill="#40c463"/>
 
         <rect class="contribution-cell-animated" 
       x="232" y="34" 
@@ -3212,7 +3212,7 @@
     <rect class="contribution-cell-animated" 
       x="573" y="67" 
       width="9" height="9" rx="2" 
-      fill="#9be9a8"
+      fill="#40c463"
       style="animation-delay: 36.96s;">
     </rect>
     <circle class="explosion-particle" 
