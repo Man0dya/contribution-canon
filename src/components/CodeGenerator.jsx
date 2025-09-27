@@ -127,16 +127,14 @@ const CodeGenerator = ({ username, contributionData }) => {
       const key = `${b.cx},${b.cy}`
       const shotIndex = shotIndexByPos.get(key)
 
-      let anims = `\n          <set attributeName="opacity" to="1" begin="cycle.begin"/>\n          <set attributeName="r" to="${radius}" begin="cycle.begin"/>\n          <set attributeName="fill" to="${fill}" begin="cycle.begin"/>`
+      let anims = `\n          <set attributeName=\"opacity\" to=\"1\" begin=\"cycle.begin\"/>\n          <set attributeName=\"r\" to=\"${radius}\" begin=\"cycle.begin\"/>\n          <set attributeName=\"fill\" to=\"${fill}\" begin=\"cycle.begin\"/>`
       if (shotIndex !== undefined) {
         const popUp = (radius * 1.35).toFixed(2)
         // Pop bounce
-        anims += `\n          <animate attributeName="r" from="${radius}" to="${popUp}" begin="shot-${shotIndex}.end" dur="0.12s" fill="freeze"/>\n          <animate attributeName="r" from="${popUp}" to="${radius}" begin="shot-${shotIndex}.end+0.12s" dur="0.12s" fill="freeze"/>`
-        // Briefly disappear, change to normal color, then reappear
-        anims += `\n          <animate attributeName="opacity" from="1" to="0" begin="shot-${shotIndex}.end+0.12s" dur="0.06s" fill="freeze"/>\n          <set attributeName="fill" to="${noContributionColor}" begin="shot-${shotIndex}.end+0.19s"/>\n          <animate attributeName="opacity" from="0" to="1" begin="shot-${shotIndex}.end+0.22s" dur="0.08s" fill="freeze"/>`
+        anims += `\n          <animate attributeName=\"r\" from=\"${radius}\" to=\"${popUp}\" begin=\"shot-${shotIndex}.end\" dur=\"0.12s\" fill=\"freeze\"/>\n          <animate attributeName=\"r\" from=\"${popUp}\" to=\"${radius}\" begin=\"shot-${shotIndex}.end+0.12s\" dur=\"0.12s\" fill=\"freeze\"/>\n          <animate attributeName=\"opacity\" from=\"1\" to=\"0\" begin=\"shot-${shotIndex}.end+0.12s\" dur=\"0.06s\" fill=\"freeze\"/>\n          <set attributeName=\"fill\" to=\"${noContributionColor}\" begin=\"shot-${shotIndex}.end+0.19s\"/>\n          <animate attributeName=\"opacity\" from=\"0\" to=\"1\" begin=\"shot-${shotIndex}.end+0.22s\" dur=\"0.08s\" fill=\"freeze\"/>`
       }
 
-      gridStr += `\n      <g id="${gid}">\n        <circle id="${cid}" cx="${b.cx}" cy="${b.cy}" r="${radius}" fill="${fill}" opacity="1">${anims}\n        </circle>\n      </g>`
+      gridStr += `\n      <g id=\"${gid}\">\n        <circle id=\"${cid}\" cx=\"${b.cx}\" cy=\"${b.cy}\" r=\"${radius}\" fill=\"${fill}\" opacity=\"1\">${anims}\n        </circle>\n      </g>`
     })
 
     // Bullets and pops
@@ -145,7 +143,7 @@ const CodeGenerator = ({ username, contributionData }) => {
     prunedTargets.forEach((t, i) => {
       const begin = (i * (tShot + tGap)).toFixed(3)
       const shotId = `shot-${i}`
-      bulletsStr += `\n      <circle cx="${shooterX}" cy="${shooterY}" r="3.5" fill="${theme.cannon}" opacity="0">\n        <set attributeName="opacity" to="1" begin="cycle.begin+${begin}s"/>\n        <animate id="${shotId}" attributeName="cy" from="${shooterY}" to="${t.cy}" begin="cycle.begin+${begin}s" dur="${tShot}s" fill="freeze"/>\n        <animate attributeName="cx" from="${shooterX}" to="${t.cx}" begin="cycle.begin+${begin}s" dur="${tShot}s" fill="freeze"/>\n        <set attributeName="opacity" to="0" begin="${shotId}.end"/>\n      </circle>`
+  bulletsStr += `\n      <circle cx="${shooterX}" cy="${shooterY}" r="3.5" fill="${theme.cannon}" opacity="0">\n        <set attributeName="opacity" to="1" begin="cycle.begin+${begin}s"/>\n        <animate id="${shotId}" attributeName="cy" from="${shooterY}" to="${t.cy}" begin="cycle.begin+${begin}s" dur="${tShot}s" fill="freeze"/>\n        <animate attributeName="cx" from="${shooterX}" to="${t.cx}" begin="cycle.begin+${begin}s" dur="${tShot}s" fill="freeze"/>\n        <set attributeName="opacity" to="0" begin="${shotId}.end"/>\n      </circle>`
 
   // Identify target (kept for reference; color change handled inside bubble via shot index mapping)
 
