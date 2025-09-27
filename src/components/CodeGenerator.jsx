@@ -6,7 +6,8 @@ const CodeGenerator = ({ username, contributionData }) => {
   const [copied, setCopied] = useState(false)
   const [selectedTheme, setSelectedTheme] = useState('default')
   const [animationSpeed, setAnimationSpeed] = useState('normal')
-  const [size, setSize] = useState('medium')
+  const [noContributionColor, setNoContributionColor] = useState('#ebedf0')
+  const [hideZeroDays, setHideZeroDays] = useState(false)
 
   const themes = {
     default: {
@@ -35,97 +36,35 @@ const CodeGenerator = ({ username, contributionData }) => {
     }
   }
 
-  const sizes = {
-    small: { width: 600, height: 150 },
-    medium: { width: 800, height: 200 },
-    large: { width: 1000, height: 250 }
-  }
+  // Default viewBox for exported/previewed SVG; width attribute is 100% to match README width
+  const defaultViewBox = { width: 1200, height: 340 }
 
   const generateSvgCode = () => {
+    // Bubble Shooter style SVG generator: green (contributed) cells are targets.
     if (!contributionData || contributionData.length === 0) {
-      return `<svg width="800" height="200" xmlns="http://www.w3.org/2000/svg">
-        <text x="400" y="100" text-anchor="middle" fill="#666">No contribution data available</text>
+      return `<svg width="800" height="220" xmlns="http://www.w3.org/2000/svg">
+        <rect width="100%" height="100%" fill="#f6f8fa"/>
+        <text x="400" y="110" text-anchor="middle" fill="#666" font-family="sans-serif" font-size="14">No contribution data available</text>
       </svg>`
     }
 
     const theme = themes[selectedTheme]
-    const sizeConfig = sizes[size]
-    
-    // Calculate grid dimensions based on real data
-    const weeks = contributionData.length
-    const days = 7
-    const cellSize = 11
-    const gridWidth = weeks * cellSize
-    const gridHeight = days * cellSize
-    
-    // Get only cells with contributions for animation
-    const contributionCells = []
-    contributionData.forEach((week, weekIndex) => {
-      week.forEach((day, dayIndex) => {
-        if (day.count > 0) {
-          contributionCells.push({
-            weekIndex,
-            dayIndex,
-            count: day.count,
-            level: day.level,
-            x: weekIndex * cellSize + 1,
-            y: dayIndex * cellSize + 1
-          })
-        }
-      })
+    // Map speed to duration scale (lower = faster)
+    const speedMul = animationSpeed === 'fast' ? 0.6 : animationSpeed === 'slow' ? 1.6 : 1
+
+    return buildBubbleShooterSVG({
+      username,
+      data: contributionData,
+      width: defaultViewBox.width,
+      height: defaultViewBox.height,
+      theme,
+      speedMul
     })
-
-    const animationDuration = contributionCells.length * 0.8 // 0.8s per cell
-    const speedMultiplier = animationSpeed === 'fast' ? 0.5 : animationSpeed === 'slow' ? 2 : 1
-    const totalDuration = animationDuration * speedMultiplier
-
-    return `<svg width="${sizeConfig.width}" height="${sizeConfig.height}" viewBox="0 0 ${sizeConfig.width} ${sizeConfig.height}" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <style>
-      .contribution-grid { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-      .contribution-cell { 
-        animation: pop-animation ${totalDuration}s infinite linear;
-        transform-origin: center;
-      }
-      
-      @keyframes pop-animation {
-        0%, 90% { transform: scale(1); opacity: 1; }
-        2% { transform: scale(1.3) rotate(15deg); opacity: 0.8; }
-        4% { transform: scale(0.8) rotate(-10deg); opacity: 0.6; }
-        6% { transform: scale(1.1) rotate(5deg); opacity: 0.4; }
-        8% { transform: scale(0); opacity: 0; }
-        10%, 100% { transform: scale(1); opacity: 1; }
-      }
-    </style>
-  </defs>
-  
-  <!-- Background -->
-  <rect width="100%" height="100%" fill="${theme.background}" rx="6"/>
-  
-  <!-- Title -->
-  <text x="20" y="30" font-family="sans-serif" font-size="16" font-weight="bold" fill="#333">
-    ${username}'s Contribution Animation
-  </text>
-  
-  <!-- Contribution Grid -->
-  <g class="contribution-grid" transform="translate(20, 50)">
-    ${generateRealContributionGrid(contributionData, theme, contributionCells, totalDuration)}
-  </g>
-  
-  <!-- Legend -->
-  <g transform="translate(20, ${sizeConfig.height - 30})">
-    <text x="0" y="0" font-family="sans-serif" font-size="12" fill="#666">Less</text>
-    ${[0, 1, 2, 3, 4].map(level => 
-      `<rect x="${40 + level * 15}" y="-10" width="10" height="10" rx="2" fill="${getContributionColorForLevel(level)}"/>`
-    ).join('')}
-    <text x="${40 + 5 * 15}" y="0" font-family="sans-serif" font-size="12" fill="#666">More</text>
-  </g>
-</svg>`
   }
 
   const getContributionColorForLevel = (level) => {
     const colors = {
-      0: '#ebedf0', // No contributions
+      0: noContributionColor, // No contributions (customizable)
       1: '#9be9a8', // Low
       2: '#40c463', // Medium-low  
       3: '#30a14e', // Medium-high
@@ -134,72 +73,93 @@ const CodeGenerator = ({ username, contributionData }) => {
     return colors[level] || colors[0]
   }
 
-  const generateRealContributionGrid = (data, theme, contributionCells, totalDuration) => {
-    if (!data || data.length === 0) return ''
-    
-    let grid = ''
-    const cellSize = 11
-    
-    // Generate all cells (background grid)
-    data.forEach((week, weekIndex) => {
-      week.forEach((day, dayIndex) => {
-        const x = weekIndex * cellSize + 1
-        const y = dayIndex * cellSize + 1
-        const color = getContributionColorForLevel(day.level)
-        
-        grid += `<rect x="${x}" y="${y}" width="9" height="9" rx="2" fill="${color}"/>
-        `
+  // Build Bubble Shooter style SVG string using SMIL animations
+  const buildBubbleShooterSVG = ({ username, data, width, height, theme, speedMul }) => {
+    const margin = { left: 20, top: 40, right: 20, bottom: 30 }
+    const weeks = data.length
+    const days = 7
+    // Revert bubble sizing cap
+    const cell = Math.max(10, Math.min(14, Math.floor((width - margin.left - margin.right) / Math.max(30, weeks))))
+    const radius = Math.floor(cell * 0.45)
+    const gridW = weeks * cell
+    const gridH = days * cell
+    const originX = margin.left + (width - margin.left - margin.right - gridW) / 2
+    const originY = margin.top
+
+    const shooterX = originX + gridW / 2
+    const shooterY = originY + gridH + 26
+
+    // Build list of bubbles with positions (centers)
+    const bubbles = []
+    data.forEach((week, wi) => {
+      week.forEach((day, di) => {
+        const cx = originX + wi * cell + cell / 2
+        const cy = originY + di * cell + cell / 2
+        const isGreen = day.count > 0
+        bubbles.push({ cx, cy, level: day.level, isGreen })
       })
     })
-    
-    // Generate animated cells (only for contributions > 0)
-    contributionCells.forEach((cell, index) => {
-      const animationDelay = (index * 0.8) % totalDuration // Stagger animations
-      
-      grid += `<rect class="contribution-cell" 
-        x="${cell.x}" y="${cell.y}" 
-        width="9" height="9" rx="2" 
-        fill="${getContributionColorForLevel(cell.level)}"
-        style="animation-delay: ${animationDelay}s;">
-        
-        <!-- Explosion effect -->
-        <animate attributeName="fill" 
-          values="${getContributionColorForLevel(cell.level)};#ff6b35;#ffd700;${getContributionColorForLevel(cell.level)}" 
-          dur="${totalDuration}s" 
-          begin="${animationDelay}s"
-          repeatCount="indefinite"/>
-      </rect>
-      `
-      
-      // Add explosion particles
-      for (let i = 0; i < 4; i++) {
-        const angle = (i * 90) * (Math.PI / 180)
-        const radius = 8
-        const particleX = cell.x + 4.5 + Math.cos(angle) * radius
-        const particleY = cell.y + 4.5 + Math.sin(angle) * radius
-        
-        grid += `<circle cx="${cell.x + 4.5}" cy="${cell.y + 4.5}" r="1" fill="#ffd700" opacity="0">
-          <animate attributeName="cx" 
-            values="${cell.x + 4.5};${particleX};${cell.x + 4.5}" 
-            dur="${totalDuration}s" 
-            begin="${animationDelay}s"
-            repeatCount="indefinite"/>
-          <animate attributeName="cy" 
-            values="${cell.y + 4.5};${particleY};${cell.y + 4.5}" 
-            dur="${totalDuration}s" 
-            begin="${animationDelay}s"
-            repeatCount="indefinite"/>
-          <animate attributeName="opacity" 
-            values="0;0;1;0.5;0" 
-            dur="${totalDuration}s" 
-            begin="${animationDelay}s"
-            repeatCount="indefinite"/>
-        </circle>
-        `
+
+    // Targets are only green bubbles (contribution days)
+    const targets = bubbles.filter(b => b.isGreen)
+    // Safety cap to avoid huge files
+    const MAX_TARGETS = 220
+    const prunedTargets = targets.slice(0, MAX_TARGETS)
+
+    // Timings (apply speed scale directly so fast -> shorter, slow -> longer)
+    const tShot = 0.6 * speedMul
+    const tGap = 0.25 * speedMul
+    const total = prunedTargets.length > 0 ? prunedTargets.length * (tShot + tGap) + 0.5 : 2
+
+    // Map targets to their shot index to drive per-bubble animations
+    const shotIndexByPos = new Map()
+    prunedTargets.forEach((t, i) => {
+      shotIndexByPos.set(`${t.cx},${t.cy}`, i)
+    })
+
+    // Grid bubbles: include all days unless hidden; embed pop + color-change animations per bubble
+    let gridStr = ''
+    bubbles.forEach((b, idx) => {
+      if (hideZeroDays && !b.isGreen) return
+      const fill = getContributionColorForLevel(b.level)
+      const gid = `bubble-${idx}`
+      const cid = `bubble-${idx}-c`
+      const key = `${b.cx},${b.cy}`
+      const shotIndex = shotIndexByPos.get(key)
+
+      let anims = `\n          <set attributeName="opacity" to="1" begin="cycle.begin"/>\n          <set attributeName="r" to="${radius}" begin="cycle.begin"/>\n          <set attributeName="fill" to="${fill}" begin="cycle.begin"/>`
+      if (shotIndex !== undefined) {
+        const popUp = (radius * 1.35).toFixed(2)
+        anims += `\n          <set attributeName="fill" to="${noContributionColor}" begin="shot-${shotIndex}.end"/>\n          <animate attributeName="r" from="${radius}" to="${popUp}" begin="shot-${shotIndex}.end" dur="0.12s" fill="freeze"/>\n          <animate attributeName="r" from="${popUp}" to="${radius}" begin="shot-${shotIndex}.end+0.12s" dur="0.12s" fill="freeze"/>`
+      }
+
+      gridStr += `\n      <g id="${gid}">\n        <circle id="${cid}" cx="${b.cx}" cy="${b.cy}" r="${radius}" fill="${fill}" opacity="1">${anims}\n        </circle>\n      </g>`
+    })
+
+    // Bullets and pops
+    let bulletsStr = ''
+    let popsStr = ''
+    prunedTargets.forEach((t, i) => {
+      const begin = (i * (tShot + tGap)).toFixed(3)
+      const shotId = `shot-${i}`
+      bulletsStr += `\n      <circle cx="${shooterX}" cy="${shooterY}" r="3.5" fill="${theme.cannon}" opacity="0">\n        <set attributeName="opacity" to="1" begin="cycle.begin+${begin}s"/>\n        <animate id="${shotId}" attributeName="cy" from="${shooterY}" to="${t.cy}" begin="cycle.begin+${begin}s" dur="${tShot}s" fill="freeze"/>\n        <animate attributeName="cx" from="${shooterX}" to="${t.cx}" begin="cycle.begin+${begin}s" dur="${tShot}s" fill="freeze"/>\n        <set attributeName="opacity" to="0" begin="${shotId}.end"/>\n      </circle>`
+
+  // Identify target (kept for reference; color change handled inside bubble via shot index mapping)
+
+      // Explosion ring
+      popsStr += `\n      <circle cx="${t.cx}" cy="${t.cy}" r="${radius}" fill="none" stroke="${theme.explosion}" stroke-width="2" opacity="0">\n        <set attributeName="opacity" to="1" begin="${shotId}.end"/>\n        <animate attributeName="r" from="${radius}" to="${(radius * 1.8).toFixed(2)}" begin="${shotId}.end" dur="0.35s" fill="freeze"/>\n        <animate attributeName="opacity" from="1" to="0" begin="${shotId}.end" dur="0.35s" fill="freeze"/>\n      </circle>`
+
+      // Particles
+      for (let pi = 0; pi < 6; pi++) {
+        const ang = (pi * Math.PI) / 3
+        const px = (t.cx + Math.cos(ang) * (radius * 1.6)).toFixed(2)
+        const py = (t.cy + Math.sin(ang) * (radius * 1.6)).toFixed(2)
+        popsStr += `\n      <circle cx="${t.cx}" cy="${t.cy}" r="1.6" fill="#ffd700" opacity="1">\n        <animate attributeName="cx" from="${t.cx}" to="${px}" begin="${shotId}.end" dur="0.35s" fill="freeze"/>\n        <animate attributeName="cy" from="${t.cy}" to="${py}" begin="${shotId}.end" dur="0.35s" fill="freeze"/>\n        <animate attributeName="opacity" from="1" to="0" begin="${shotId}.end" dur="0.35s" fill="freeze"/>\n      </circle>`
       }
     })
-    
-    return grid
+
+    // Build final SVG (legend removed)
+    return `<?xml version="1.0" encoding="UTF-8"?>\n<svg width="100%" viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\n  <defs>\n    <style>\n      .title { font: 600 16px/1.2 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif; fill: #111; }\n      .meta { font: 12px sans-serif; fill: #666; }\n    </style>\n  </defs>\n\n  <rect width="100%" height="100%" fill="${theme.background}" rx="8"/>\n  <text class="title" x="${margin.left}" y="24">${username}'s Bubble Shooter Contributions</text>\n\n  <!-- cycle timer to orchestrate begin/end and restart -->\n  <rect id="cycleTimer" x="-10" y="-10" width="1" height="1" fill="none">\n    <animate id="cycle" attributeName="x" from="-10" to="-9" begin="0s;cycle.end+1s" dur="${total}s" fill="freeze"/>\n  </rect>\n\n  <!-- ceiling line and shooter base -->\n  <line x1="${originX}" y1="${originY - 6}" x2="${originX + gridW}" y2="${originY - 6}" stroke="#d0d7de"/>\n  <rect x="${shooterX - 16}" y="${shooterY - 10}" width="32" height="10" rx="5" fill="${theme.cannon}" opacity="0.9"/>\n  <polygon points="${shooterX - 5},${shooterY - 10} ${shooterX + 5},${shooterY - 10} ${shooterX},${shooterY - 22}" fill="${theme.cannon}"/>\n\n  <!-- grid of bubbles (top wall) -->\n  ${gridStr}\n\n  <!-- bullets -->\n  ${bulletsStr}\n\n  <!-- pops and particles -->\n  ${popsStr}\n</svg>`
   }
 
   const generateMarkdownCode = () => {
@@ -305,18 +265,55 @@ Steps to add to your README:
                 </div>
               </div>
 
-              {/* Size Selection */}
+              {/* Non-contribution bubble color */}
               <div className="space-y-3">
-                <label className="block text-gray-700 font-medium">Size</label>
-                <select
-                  value={size}
-                  onChange={(e) => setSize(e.target.value)}
-                  className="input-field w-full"
-                >
-                  <option value="small">Small (600×150)</option>
-                  <option value="medium">Medium (800×200)</option>
-                  <option value="large">Large (1000×250)</option>
-                </select>
+                <label className="block text-gray-700 font-medium">No-contribution Bubble Color</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={noContributionColor}
+                    onChange={(e) => setNoContributionColor(e.target.value)}
+                    className="w-10 h-10 p-0 border rounded"
+                    aria-label="Pick color for non-contribution bubbles"
+                  />
+                  <input
+                    type="text"
+                    value={noContributionColor}
+                    onChange={(e) => setNoContributionColor(e.target.value)}
+                    className="input-field flex-1"
+                    placeholder="#ebedf0"
+                  />
+                </div>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {[
+                    { label: 'GitHub Gray', value: '#ebedf0' },
+                    { label: 'Warm Gray', value: '#e5e7eb' },
+                    { label: 'Cool Gray', value: '#e2e8f0' },
+                    { label: 'Light', value: '#f3f4f6' },
+                    { label: 'Dark', value: '#cbd5e1' }
+                  ].map(p => (
+                    <button
+                      key={p.value}
+                      type="button"
+                      onClick={() => setNoContributionColor(p.value)}
+                      className="px-2 py-1 text-xs rounded border bg-white hover:bg-gray-50"
+                    >
+                      <span className="inline-block w-3 h-3 rounded-sm mr-2 align-middle" style={{ backgroundColor: p.value }} />
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+                <div className="mt-3 flex items-center gap-2">
+                  <input
+                    id="hideZero"
+                    type="checkbox"
+                    checked={hideZeroDays}
+                    onChange={(e) => setHideZeroDays(e.target.checked)}
+                    className="rounded border-gray-300"
+                  />
+                  <label htmlFor="hideZero" className="text-sm text-gray-700">Hide days with 0 contributions</label>
+                </div>
+                <p className="text-xs text-gray-500">This color is used for days with 0 contributions.</p>
               </div>
 
               {/* Animation Speed */}
@@ -404,6 +401,15 @@ Steps to add to your README:
                 </div>
 
 
+              </div>
+
+              {/* Live Preview */}
+              <div className="space-y-3">
+                <h4 className="text-gray-800 font-semibold">Live Preview</h4>
+                <div className="border border-gray-200 rounded-lg bg-white overflow-auto max-h-[420px] p-3">
+                  <div dangerouslySetInnerHTML={{ __html: generateSvgCode() }} />
+                </div>
+                <p className="text-xs text-gray-500">Preview uses the same SVG you’ll download.</p>
               </div>
             </motion.div>
           </div>
