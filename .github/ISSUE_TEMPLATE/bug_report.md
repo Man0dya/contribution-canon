@@ -1,8 +1,9 @@
 ---
 name: Bug report
-description: Create a report to help us improve
-labels: [bug]
-assignees: []
+about: Create a report to help us improve the project
+title: "Bug: "
+labels: bug
+assignees: ""
 ---
 
 ## Describe the bug
