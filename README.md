@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎯 Contribution Canon
+# 🎯 Contribution Animation (Bubble‑Shooter)
 
 ###  [**Live Demo**](https://man0dya.github.io/contribution-canon/) 
 
@@ -19,7 +19,7 @@ Transform your GitHub contribution graph into an epic animated display! Watch as
 
 1. **Copy automation files to your repository:**
    ```bash
-   curl -L https://raw.githubusercontent.com/Man0dya/contribution-canon/main/.github/workflows/generate-animation.yml -o .github/workflows/generate-animation.yml
+   curl -L https://raw.githubusercontent.com/Man0dya/contribution-canon/main/.github/workflows/generate-contribution-animation.yml -o .github/workflows/generate-contribution-animation.yml
    curl -L https://raw.githubusercontent.com/Man0dya/contribution-canon/main/scripts/generate-svg.cjs -o scripts/generate-svg.cjs
    ```
 
@@ -43,7 +43,7 @@ Transform your GitHub contribution graph into an epic animated display! Watch as
 
 #### Method 2: Manual Generation
 
-1. Visit **[Contribution Canon Website](https://man0dya.github.io/contribution-canon)**
+1. Visit **[Contribution Animation Website](https://man0dya.github.io/contribution-canon)**
 2. Enter your GitHub username
 3. Customize your animation (theme, size, speed)
 4. Click **"Download SVG"**
@@ -110,15 +110,14 @@ Transform your GitHub contribution graph into an epic animated display! Watch as
 ```
 contribution-canon/
 ├── .github/workflows/
-│   └── generate-animation.yml    # GitHub Actions automation
+│   └── generate-contribution-animation.yml    # GitHub Actions automation
 ├── scripts/
 │   └── generate-svg.cjs          # SVG generation script  
 ├── src/
 │   ├── components/
 │   │   ├── Header.jsx            # Site header
 │   │   ├── UsernameForm.jsx      # Username input form
-│   │   ├── CannonAnimation.jsx   # Main animation component
-│   │   ├── CodeGenerator.jsx     # SVG generator & customization
+│   │   └── CodeGenerator.jsx     # Bubble‑shooter SVG generator & customization
 │   │   └── Footer.jsx            # Site footer
 │   ├── utils/
 │   │   └── github.js             # GitHub API utilities

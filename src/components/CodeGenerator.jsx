@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Copy, Check, Download, Code, Palette, Settings } from 'lucide-react'
+import generatorScript from '../../scripts/generate-svg.cjs?raw'
 
 const CodeGenerator = ({ username, contributionData }) => {
   const [copied, setCopied] = useState(false)
+  const [copiedWorkflow, setCopiedWorkflow] = useState(false)
+  const [copiedScript, setCopiedScript] = useState(false)
+  const [copiedReadme, setCopiedReadme] = useState(false)
   const [selectedTheme, setSelectedTheme] = useState('default')
   const [animationSpeed, setAnimationSpeed] = useState('normal')
   const [noContributionColor, setNoContributionColor] = useState('#ebedf0')
   const [hideZeroDays, setHideZeroDays] = useState(false)
   const [animatedFileName, setAnimatedFileName] = useState(`${username}-contribution-animation.svg`)
   const [staticFileName, setStaticFileName] = useState(`${username}-contributions.svg`)
+  const [readmeMode, setReadmeMode] = useState('auto') // 'auto' | 'light' | 'dark'
 
   // Keep default filenames in sync with username; user can override afterwards
   useEffect(() => {
@@ -20,25 +25,25 @@ const CodeGenerator = ({ username, contributionData }) => {
   const themes = {
     default: {
       name: 'Default',
-      cannon: '#4f46e5',
+      shooter: '#4f46e5',
       explosion: '#ff6b35',
       background: '#ffffff'
     },
     github: {
       name: 'GitHub',
-      cannon: '#216e39',
+      shooter: '#216e39',
       explosion: '#ff4444',
       background: '#f6f8fa'
     },
     ocean: {
       name: 'Ocean',
-      cannon: '#0ea5e9',
+      shooter: '#0ea5e9',
       explosion: '#f97316',
       background: '#f0f9ff'
     },
     sunset: {
       name: 'Sunset',
-      cannon: '#dc2626',
+      shooter: '#dc2626',
       explosion: '#fbbf24',
       background: '#fef3c7'
     }
@@ -154,7 +159,7 @@ const CodeGenerator = ({ username, contributionData }) => {
     prunedTargets.forEach((t, i) => {
       const begin = (i * (tShot + tGap)).toFixed(3)
       const shotId = `shot-${i}`
-  bulletsStr += `\n      <circle cx="${shooterX}" cy="${shooterY}" r="3.5" fill="${theme.cannon}" opacity="0">\n        <set attributeName="opacity" to="1" begin="cycle.begin+${begin}s"/>\n        <animate id="${shotId}" attributeName="cy" from="${shooterY}" to="${t.cy}" begin="cycle.begin+${begin}s" dur="${tShot}s" fill="freeze"/>\n        <animate attributeName="cx" from="${shooterX}" to="${t.cx}" begin="cycle.begin+${begin}s" dur="${tShot}s" fill="freeze"/>\n        <set attributeName="opacity" to="0" begin="${shotId}.end"/>\n      </circle>`
+        bulletsStr += `\n      <circle cx="${shooterX}" cy="${shooterY}" r="3.5" fill="${theme.shooter}" opacity="0">\n        <set attributeName="opacity" to="1" begin="cycle.begin+${begin}s"/>\n        <animate id="${shotId}" attributeName="cy" from="${shooterY}" to="${t.cy}" begin="cycle.begin+${begin}s" dur="${tShot}s" fill="freeze"/>\n        <animate attributeName="cx" from="${shooterX}" to="${t.cx}" begin="cycle.begin+${begin}s" dur="${tShot}s" fill="freeze"/>\n        <set attributeName="opacity" to="0" begin="${shotId}.end"/>\n      </circle>`
 
   // Identify target (kept for reference; color change handled inside bubble via shot index mapping)
 
@@ -174,7 +179,7 @@ const CodeGenerator = ({ username, contributionData }) => {
     const bgRect = transparent ? '' : `\n  <rect width=\"100%\" height=\"100%\" fill=\"${theme.background}\" rx=\"8\"/>`
     const vbW = gridW
     const vbH = gridH + shooterYOffset
-    return `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg width=\"100%\" viewBox=\"0 0 ${vbW} ${vbH}\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n  <defs>\n    <style>\n      .title { font: 600 16px/1.2 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif; fill: #111; }\n      .meta { font: 12px sans-serif; fill: #666; }\n    </style>\n  </defs>\n${bgRect}\n  <!-- cycle timer to orchestrate begin/end and restart -->\n  <rect id=\"cycleTimer\" x=\"-10\" y=\"-10\" width=\"1\" height=\"1\" fill=\"none\">\n    <animate id=\"cycle\" attributeName=\"x\" from=\"-10\" to=\"-9\" begin=\"0s;cycle.end+1s\" dur=\"${total}s\" fill=\"freeze\"/>\n  </rect>\n\n  <!-- shooter base -->\n  <rect x=\"${shooterX - 16}\" y=\"${shooterY - 10}\" width=\"32\" height=\"10\" rx=\"5\" fill=\"${theme.cannon}\" opacity=\"0.9\"/>\n  <polygon points=\"${shooterX - 5},${shooterY - 10} ${shooterX + 5},${shooterY - 10} ${shooterX},${shooterY - 22}\" fill=\"${theme.cannon}\"/>\n\n  <!-- grid of bubbles (top wall) -->\n  ${gridStr}\n\n  <!-- bullets -->\n  ${bulletsStr}\n\n  <!-- pops and particles -->\n  ${popsStr}\n</svg>`
+    return `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg width=\"100%\" viewBox=\"0 0 ${vbW} ${vbH}\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n  <defs>\n    <style>\n      .title { font: 600 16px/1.2 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif; fill: #111; }\n      .meta { font: 12px sans-serif; fill: #666; }\n    </style>\n  </defs>\n${bgRect}\n  <!-- cycle timer to orchestrate begin/end and restart -->\n  <rect id=\"cycleTimer\" x=\"-10\" y=\"-10\" width=\"1\" height=\"1\" fill=\"none\">\n    <animate id=\"cycle\" attributeName=\"x\" from=\"-10\" to=\"-9\" begin=\"0s;cycle.end+1s\" dur=\"${total}s\" fill=\"freeze\"/>\n  </rect>\n\n  <!-- shooter base -->\n  <rect x=\"${shooterX - 16}\" y=\"${shooterY - 10}\" width=\"32\" height=\"10\" rx=\"5\" fill=\"${theme.shooter}\" opacity=\"0.9\"/>\n  <polygon points=\"${shooterX - 5},${shooterY - 10} ${shooterX + 5},${shooterY - 10} ${shooterX},${shooterY - 22}\" fill=\"${theme.shooter}\"/>\n\n  <!-- grid of bubbles (top wall) -->\n  ${gridStr}\n\n  <!-- bullets -->\n  ${bulletsStr}\n\n  <!-- pops and particles -->\n  ${popsStr}\n</svg>`
   }
 
   // Build a static contribution graph (no animation), transparent by default
@@ -206,6 +211,61 @@ const CodeGenerator = ({ username, contributionData }) => {
     return `![${username}'s Contribution Animation](${fileName})`
   }
 
+  // Build README snippet by mode (auto/light/dark)
+  const buildReadmeSnippet = () => {
+    const base = animatedFileName || `${username}-contribution-animation.svg`
+    if (readmeMode === 'dark') {
+      const dark = base.endsWith('.svg') ? base.replace(/\.svg$/, '-dark.svg') : `${base}-dark.svg`
+      return `![${username}'s Contribution Animation](${dark})`
+    }
+    if (readmeMode === 'light') {
+      return `![${username}'s Contribution Animation](${base})`
+    }
+    const dark = base.endsWith('.svg') ? base.replace(/\.svg$/, '-dark.svg') : `${base}-dark.svg`
+    return `<picture>\n  <source media="(prefers-color-scheme: dark)" srcset="${dark}" />\n  <img alt="${username}'s Contribution Animation" src="${base}" />\n</picture>`
+  }
+
+  // Provide a ready-to-copy GitHub Actions workflow to auto-generate the SVG daily
+  const generateWorkflowYAML = () => [
+    'name: Generate Contribution Animation',
+    '',
+    '# Runs every day at 00:00 UTC, on manual dispatch, and on pushes to main',
+    'on:',
+    '  schedule:',
+    "    - cron: '0 0 * * *'",
+    '  workflow_dispatch: {}',
+    '  push:',
+    '    branches: [ main ]',
+    '',
+    'permissions:',
+    '  contents: write  # required to commit the generated SVG back to the repo',
+    '',
+    'jobs:',
+    '  build:',
+    '    runs-on: ubuntu-latest',
+    '    steps:',
+    '      - name: Checkout',
+    '        uses: actions/checkout@v4',
+    '        with:',
+    '          fetch-depth: 0',
+    '',
+  '      - name: Setup Node',
+    '        uses: actions/setup-node@v4',
+    '        with:',
+  "          node-version: '20'",
+    '',
+    '      - name: Generate animated SVG',
+    '        run: node scripts/generate-svg.cjs',
+    '        env:',
+    '          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}',
+    '',
+  '      - name: Commit and push SVG',
+    '        uses: stefanzweifel/git-auto-commit-action@v5',
+    '        with:',
+    "          commit_message: 'chore: update contribution animation [skip ci]'",
+    '          file_pattern: "*-contribution-animation*.svg contribution-animation*.svg github-contribution-animation*.svg"',
+  ].join('\n')
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(generateMarkdownCode())
@@ -213,6 +273,37 @@ const CodeGenerator = ({ username, contributionData }) => {
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
       console.error('Failed to copy:', err)
+    }
+  }
+
+  const handleCopyWorkflow = async () => {
+    try {
+      await navigator.clipboard.writeText(generateWorkflowYAML())
+      setCopiedWorkflow(true)
+      setTimeout(() => setCopiedWorkflow(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy workflow:', err)
+    }
+  }
+
+  const handleCopyScript = async () => {
+    try {
+      await navigator.clipboard.writeText(generatorScript)
+      setCopiedScript(true)
+      setTimeout(() => setCopiedScript(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy script:', err)
+    }
+  }
+
+  const handleCopyReadme = async () => {
+    const snippet = buildReadmeSnippet()
+    try {
+      await navigator.clipboard.writeText(snippet)
+      setCopiedReadme(true)
+      setTimeout(() => setCopiedReadme(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy README snippet:', err)
     }
   }
 
@@ -312,7 +403,7 @@ const CodeGenerator = ({ username, contributionData }) => {
                       <div className="flex items-center space-x-3">
                         <div 
                           className="w-4 h-4 rounded-full"
-                          style={{ backgroundColor: theme.cannon }}
+                          style={{ backgroundColor: theme.shooter }}
                         />
                         <span className="text-gray-700 text-sm">{theme.name}</span>
                       </div>
@@ -421,7 +512,7 @@ const CodeGenerator = ({ username, contributionData }) => {
                   className="w-full btn-secondary flex items-center justify-center space-x-2"
                 >
                   <Download className="w-5 h-5" />
-                  <span>Download Animated (Canon)</span>
+                  <span>Download Animated</span>
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -506,6 +597,136 @@ const CodeGenerator = ({ username, contributionData }) => {
             </div>
             <p className="text-xs text-gray-500 mt-2">Preview uses the same SVG you’ll download.</p>
           </div>
+
+          {/* Automate with GitHub Actions (for users of the website) */}
+          <div className="mt-10">
+            <h4 className="text-gray-800 font-semibold mb-3">Automate in your own repo</h4>
+            <div className="border border-gray-200 rounded-lg bg-white p-4 w-full space-y-4">
+              <ol className="text-gray-700 text-sm space-y-3 list-decimal list-inside">
+                <li>
+                  Create the generator script at <code className="bg-gray-100 px-1 rounded text-xs">scripts/generate-svg.cjs</code>.
+                </li>
+              </ol>
+
+              {/* Generator script content with copy button */}
+              <div className="bg-gray-900 rounded-lg p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-gray-400 text-xs font-mono">scripts/generate-svg.cjs</span>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleCopyScript}
+                    className="px-2 py-1 bg-gray-800 hover:bg-gray-700 rounded text-xs text-gray-100"
+                  >
+                    {copiedScript ? 'Copied!' : 'Copy script'}
+                  </motion.button>
+                </div>
+                <pre className="text-gray-100 text-[11px] leading-4 overflow-auto max-h-96"><code>{generatorScript}</code></pre>
+              </div>
+
+              <ol start={2} className="text-gray-700 text-sm space-y-3 list-decimal list-inside">
+                <li>
+                  Create the workflow file at <code className="bg-gray-100 px-1 rounded text-xs">.github/workflows/generate-contribution-animation.yml</code> and paste the content below.
+                </li>
+              </ol>
+
+              <div className="bg-gray-900 rounded-lg p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-gray-400 text-xs font-mono">.github/workflows/generate-contribution-animation.yml</span>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleCopyWorkflow}
+                    className="px-2 py-1 bg-gray-800 hover:bg-gray-700 rounded text-xs text-gray-100"
+                  >
+                    {copiedWorkflow ? 'Copied!' : 'Copy YAML'}
+                  </motion.button>
+                </div>
+                <pre className="text-gray-100 text-[11px] leading-4 overflow-auto"><code>{generateWorkflowYAML()}</code></pre>
+              </div>
+
+              <ol start={3} className="text-gray-700 text-sm space-y-3 list-decimal list-inside">
+                <li>
+                  Commit and push both files to your repository. This will also trigger the workflow on push.
+                </li>
+                <li>
+                  Add this Markdown to your README where you want the animation to appear:
+                </li>
+              </ol>
+
+              <div className="bg-gray-900 rounded-lg p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-gray-400 text-xs font-mono">README snippet</span>
+                  <div className="flex items-center gap-2">
+                    <div className="inline-flex rounded overflow-hidden border border-gray-700">
+                      <button
+                        type="button"
+                        onClick={() => setReadmeMode('auto')}
+                        className={`px-2 py-1 text-xs ${readmeMode === 'auto' ? 'bg-gray-700 text-gray-100' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
+                        title="Auto (light + dark)"
+                      >Auto</button>
+                      <button
+                        type="button"
+                        onClick={() => setReadmeMode('light')}
+                        className={`px-2 py-1 text-xs border-l border-gray-700 ${readmeMode === 'light' ? 'bg-gray-700 text-gray-100' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
+                        title="Light only"
+                      >Light</button>
+                      <button
+                        type="button"
+                        onClick={() => setReadmeMode('dark')}
+                        className={`px-2 py-1 text-xs border-l border-gray-700 ${readmeMode === 'dark' ? 'bg-gray-700 text-gray-100' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
+                        title="Dark only"
+                      >Dark</button>
+                    </div>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={handleCopyReadme}
+                      className="px-2 py-1 bg-gray-800 hover:bg-gray-700 rounded text-xs text-gray-100"
+                    >
+                      {copiedReadme ? 'Copied!' : 'Copy'}
+                    </motion.button>
+                  </div>
+                </div>
+                <pre className="text-green-200 text-[11px] leading-4 overflow-auto"><code>{buildReadmeSnippet()}</code></pre>
+              </div>
+
+              <ol start={5} className="text-gray-700 text-sm space-y-3 list-decimal list-inside">
+                <li>
+                  Trigger the workflow: go to the Actions tab in your repo, select
+                  <span className="mx-1 italic">Generate Contribution Animation</span>, and click <span className="italic">Run workflow</span>. Or simply push again.
+                </li>
+                <li>
+                  Verify the generated SVG files appear at the repo root (e.g.,
+                  <code className="bg-gray-100 px-1 rounded text-xs ml-1">github-contribution-animation.svg</code> and <code className="bg-gray-100 px-1 rounded text-xs ml-1">github-contribution-animation-dark.svg</code>), and that your README image renders.
+                </li>
+              </ol>
+
+              <div className="text-xs text-gray-500">
+                <p>Notes:</p>
+                <ul className="list-disc list-inside mt-1 space-y-1">
+                  <li>No extra token required: the workflow uses the built‑in <code className="bg-gray-100 px-1 rounded">GITHUB_TOKEN</code>.</li>
+                  <li>If your default branch isn’t <code className="bg-gray-100 px-1 rounded">main</code>, update the workflow’s <code className="bg-gray-100 px-1 rounded">push.branches</code> accordingly.</li>
+                  <li>If branch protection blocks workflow commits, allow workflow commits or commit to another branch and reference that file in your README.</li>
+                </ul>
+              </div>
+
+              {/* What the generator script does */}
+              <div className="mt-4 text-sm text-gray-700">
+                <h5 className="font-semibold mb-2">What does <code className="bg-gray-100 px-1 rounded text-xs">scripts/generate-svg.cjs</code> do?</h5>
+                <ul className="list-disc list-inside space-y-1">
+                  <li>Runs in GitHub Actions (headless) and reads your repo owner as the GitHub username.</li>
+                  <li>Uses the GitHub GraphQL API with <code className="bg-gray-100 px-1 rounded text-xs">GITHUB_TOKEN</code> to fetch your contribution calendar data.</li>
+                  <li>Builds an animated SVG from that data.</li>
+                  <li>Writes these files at the repo root: <code className="bg-gray-100 px-1 rounded text-xs">{`${username}-contribution-animation.svg`}</code>, <code className="bg-gray-100 px-1 rounded text-xs">contribution-animation.svg</code>, <code className="bg-gray-100 px-1 rounded text-xs">github-contribution-animation.svg</code>, and their <code className="bg-gray-100 px-1 rounded text-xs">*-dark.svg</code> equivalents for dark mode.</li>
+                  <li>The workflow then commits the SVGs so your README always points at the latest version.</li>
+                </ul>
+                <p className="text-xs text-gray-500 mt-2">Tip: It’s designed for GitHub Actions. You can run it locally if you export <code className="bg-gray-100 px-1 rounded">GITHUB_TOKEN</code> and set <code className="bg-gray-100 px-1 rounded">GITHUB_REPOSITORY</code>, but the automated workflow is the recommended path.</p>
+              </div>
+            </div>
+          </div>
+
+          
 
         </motion.div>
       </div>

@@ -22,10 +22,10 @@ const Footer = () => {
               viewport={{ once: true }}
             >
               <h3 className="text-3xl font-bold text-gradient mb-2">
-                Contribution Canon
+                Contribution Animation
               </h3>
               <p className="text-gray-600 max-w-2xl mx-auto">
-                Transform your GitHub contribution graph into epic cannon animations. 
+                Turn your GitHub contribution graph into a playful bubble-shooter style animation.
                 Open source, free forever, and built with love for the developer community.
               </p>
             </motion.div>
@@ -120,7 +120,7 @@ const Footer = () => {
 
 
             <div className="flex flex-wrap justify-center items-center gap-6 text-gray-500 text-sm">
-              <span>© 2025 Contribution Canon</span>
+              <span>© 2025 Contribution Animation</span>
               <span>•</span>
               <a 
                 href="https://github.com/Man0dya/contribution-canon/blob/main/LICENSE" 
@@ -159,7 +159,7 @@ const Footer = () => {
             >
               <div className="flex items-center space-x-1">
                 <span>🚀</span>
-                <span>Cannons Fired: 1,337</span>
+                <span>Shots Fired: 1,337</span>
               </div>
               <div className="flex items-center space-x-1">
                 <span>💥</span>

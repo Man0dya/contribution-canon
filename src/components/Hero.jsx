@@ -14,7 +14,7 @@ const Hero = () => {
         >
           {/* Main heading */}
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900">
-            <span className="text-blue-600">Contribution</span> Canon
+            <span className="text-blue-600">Contribution</span> Graph
           </h1>
 
           {/* Simple CTA Button */}

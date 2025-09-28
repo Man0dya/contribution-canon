@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import Header from './components/Header'
 import UsernameForm from './components/UsernameForm'
-import CannonAnimation from './components/CannonAnimation'
 import CodeGenerator from './components/CodeGenerator'
 import Footer from './components/Footer'
 import TestPanel from './components/TestPanel'
@@ -107,13 +106,6 @@ function App() {
           
           {contributionData && (
             <div className="space-y-6">
-              <CannonAnimation 
-                key={animationKey}
-                contributionData={contributionData}
-                username={username}
-                isUsingMockData={isUsingMockData}
-              />
-              
               <CodeGenerator 
                 username={username}
                 contributionData={contributionData}

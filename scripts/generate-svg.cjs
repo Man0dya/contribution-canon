@@ -3,16 +3,13 @@
 const fs = require('fs');
 const https = require('https');
 
-/**
- * GitHub Contribution Animation Generator
- * Generates animated SVG similar to snake animation but with popping contribution boxes
- */
+// Bubble-shooter animated SVG generator (SMIL-based), background-free
 
 // Get username from repository owner
-const username = process.env.GITHUB_REPOSITORY?.split('/')[0] || 'Man0dya';
+const username = (process.env.GITHUB_REPOSITORY && process.env.GITHUB_REPOSITORY.split('/')[0]) || 'Man0dya';
 const githubToken = process.env.GITHUB_TOKEN;
 
-console.log(`🎯 Generating contribution animation for: ${username}`);
+console.log(`🎯 Generating bubble-shooter animation for: ${username}`);
 console.log(`📦 Repository: ${process.env.GITHUB_REPOSITORY || 'Not set'}`);
 console.log(`🔑 Token available: ${githubToken ? 'Yes' : 'No'}`);
 
@@ -21,10 +18,8 @@ if (!githubToken) {
   process.exit(1);
 }
 
-/**
- * Fetch contribution data from GitHub API
- */
-async function fetchContributionData(username) {
+// Fetch contribution data from GitHub GraphQL
+async function fetchContributionData(login) {
   return new Promise((resolve, reject) => {
     const query = `
       query($username: String!) {
@@ -45,302 +40,237 @@ async function fetchContributionData(username) {
       }
     `;
 
-    const postData = JSON.stringify({
-      query,
-      variables: { username }
-    });
+    const postData = JSON.stringify({ query, variables: { username: login } });
 
-    const options = {
-      hostname: 'api.github.com',
-      port: 443,
-      path: '/graphql',
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${githubToken}`,
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(postData),
-        'User-Agent': 'contribution-canon-generator',
-        'Accept': 'application/vnd.github.v4+json'
+    const req = https.request(
+      {
+        hostname: 'api.github.com',
+        port: 443,
+        path: '/graphql',
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${githubToken}`,
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(postData),
+          'User-Agent': 'contribution-animation-generator',
+          Accept: 'application/vnd.github.v4+json',
+        },
+      },
+      (res) => {
+        let data = '';
+        res.on('data', (chunk) => (data += chunk));
+        res.on('end', () => {
+          try {
+            if (res.statusCode !== 200) {
+              throw new Error(`GitHub API status ${res.statusCode}`);
+            }
+            const response = JSON.parse(data);
+            if (response.errors) {
+              throw new Error(`GraphQL Error: ${JSON.stringify(response.errors)}`);
+            }
+            const weeks = response?.data?.user?.contributionsCollection?.contributionCalendar?.weeks;
+            if (!weeks) throw new Error('Invalid response structure from GitHub API');
+            resolve(weeks);
+          } catch (e) {
+            console.error('❌ Error parsing response:', e.message);
+            console.error('📄 Raw response:', data);
+            reject(e);
+          }
+        });
       }
-    };
+    );
 
-    const req = https.request(options, (res) => {
-      let data = '';
-      
-      res.on('data', (chunk) => {
-        data += chunk;
-      });
-      
-      res.on('end', () => {
-        try {
-          console.log(`📡 API Response Status: ${res.statusCode}`);
-          console.log(`📄 Response headers: ${JSON.stringify(res.headers)}`);
-          
-          const response = JSON.parse(data);
-          console.log(`📋 Response data keys: ${Object.keys(response)}`);
-          
-          if (response.errors) {
-            console.error('❌ GraphQL Errors:', JSON.stringify(response.errors, null, 2));
-            throw new Error(`GraphQL Error: ${JSON.stringify(response.errors)}`);
-          }
-          
-          if (!response.data?.user?.contributionsCollection?.contributionCalendar?.weeks) {
-            console.error('❌ Unexpected response structure:', JSON.stringify(response, null, 2));
-            throw new Error('Invalid response structure from GitHub API');
-          }
-          
-          resolve(response.data.user.contributionsCollection.contributionCalendar.weeks);
-        } catch (error) {
-          console.error('❌ Error parsing response:', error.message);
-          console.error('📄 Raw response:', data);
-          reject(error);
-        }
-      });
-    });
-
-    req.on('error', (error) => {
-      reject(error);
-    });
-
+    req.on('error', (err) => reject(err));
     req.write(postData);
     req.end();
   });
 }
 
-/**
- * Get contribution color based on level
- */
-function getContributionColor(level) {
-  const colors = {
-    'NONE': '#ebedf0',
-    'FIRST_QUARTILE': '#9be9a8',
-    'SECOND_QUARTILE': '#40c463',
-    'THIRD_QUARTILE': '#30a14e',
-    'FOURTH_QUARTILE': '#216e39'
+// Map GraphQL level to numeric 0-4
+function levelToNumber(level) {
+  const map = {
+    NONE: 0,
+    FIRST_QUARTILE: 1,
+    SECOND_QUARTILE: 2,
+    THIRD_QUARTILE: 3,
+    FOURTH_QUARTILE: 4,
   };
-  return colors[level] || colors['NONE'];
+  return map[level] ?? 0;
 }
 
-/**
- * Generate animated SVG
- */
-function generateAnimatedSVG(weeks, username) {
-  // Process contribution data
-  const contributionCells = [];
-  const processedWeeks = [];
-  
-  weeks.forEach((week, weekIndex) => {
-    const processedDays = week.contributionDays.map((day, dayIndex) => ({
-      count: day.contributionCount,
-      level: day.contributionLevel,
-      date: day.date,
-      color: getContributionColor(day.contributionLevel)
-    }));
-    
-    processedWeeks.push(processedDays);
-    
-    // Collect cells with contributions for animation
-    week.contributionDays.forEach((day, dayIndex) => {
-      if (day.contributionCount > 0) {
-        contributionCells.push({
-          weekIndex,
-          dayIndex,
-          count: day.contributionCount,
-          level: day.contributionLevel,
-          x: weekIndex * 11 + 1,
-          y: dayIndex * 11 + 1,
-          color: getContributionColor(day.contributionLevel)
-        });
-      }
+function getColorForLevel(numLevel, noContributionColor = '#ebedf0') {
+  const colors = {
+    0: noContributionColor,
+    1: '#9be9a8',
+    2: '#40c463',
+    3: '#30a14e',
+    4: '#216e39',
+  };
+  return colors[numLevel] || colors[0];
+}
+
+// Build Bubble Shooter SVG (SMIL)
+function buildBubbleShooterSVG({ data, width = 1200, height = 340, theme, speedMul = 1, noContributionColor = '#ebedf0', transparent = true }) {
+  const weeks = data.length;
+  const days = 7;
+  const cell = Math.max(10, Math.min(14, Math.floor(width / Math.max(30, weeks))));
+  const radius = Math.floor(cell * 0.45);
+  const gridW = weeks * cell;
+  const gridH = days * cell;
+  const originX = 0;
+  const originY = 0;
+
+  const shooterX = originX + gridW / 2;
+  const shooterYOffset = 26;
+  const shooterY = originY + gridH + shooterYOffset;
+
+  // Build bubbles with centers
+  const bubbles = [];
+  data.forEach((week, wi) => {
+    week.forEach((day, di) => {
+      const cx = originX + wi * cell + cell / 2;
+      const cy = originY + di * cell + cell / 2;
+      const lvl = levelToNumber(day.level);
+      const isGreen = day.count > 0;
+      bubbles.push({ cx, cy, level: lvl, isGreen });
     });
   });
 
-  const svgWidth = 800;
-  const svgHeight = 200;
-  const cellSize = 11;
-  const animationDuration = Math.max(contributionCells.length * 0.6, 10); // Minimum 10 seconds
-  
-  console.log(`📊 Found ${contributionCells.length} contribution cells to animate`);
-  console.log(`⏱️ Animation duration: ${animationDuration}s`);
+  const targets = bubbles.filter((b) => b.isGreen).slice(0, 220);
+  const tShot = 0.6 * speedMul;
+  const tGap = 0.25 * speedMul;
+  const total = targets.length > 0 ? targets.length * (tShot + tGap) + 0.5 : 2;
 
-  // Generate SVG content
-  const svg = `<svg width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <style>
-      .contribution-grid { 
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; 
-      }
-      .contribution-cell-animated { 
-        animation: pop-sequence ${animationDuration}s infinite linear;
-        transform-origin: center;
-      }
-      
-      @keyframes pop-sequence {
-        0%, 95% { 
-          transform: scale(1) rotate(0deg); 
-          opacity: 1; 
-        }
-        1% { 
-          transform: scale(1.4) rotate(10deg); 
-          opacity: 0.9; 
-        }
-        2% { 
-          transform: scale(0.7) rotate(-5deg); 
-          opacity: 0.7; 
-        }
-        3% { 
-          transform: scale(1.2) rotate(3deg); 
-          opacity: 0.5; 
-        }
-        4% { 
-          transform: scale(0) rotate(0deg); 
-          opacity: 0; 
-        }
-        5%, 100% { 
-          transform: scale(1) rotate(0deg); 
-          opacity: 1; 
-        }
-      }
-      
-      .explosion-particle {
-        animation: explode ${animationDuration}s infinite linear;
-      }
-      
-      @keyframes explode {
-        0%, 95% { opacity: 0; transform: translate(0, 0) scale(0); }
-        1% { opacity: 1; transform: translate(0, 0) scale(1); }
-        2% { opacity: 0.8; transform: translate(var(--dx), var(--dy)) scale(0.8); }
-        3% { opacity: 0.4; transform: translate(calc(var(--dx) * 1.5), calc(var(--dy) * 1.5)) scale(0.4); }
-        4%, 100% { opacity: 0; transform: translate(calc(var(--dx) * 2), calc(var(--dy) * 2)) scale(0); }
-      }
-    </style>
-  </defs>
-  
-  <!-- Background -->
-  <rect width="100%" height="100%" fill="#ffffff" rx="8"/>
-  
-  <!-- Title -->
-  <text x="20" y="30" font-family="sans-serif" font-size="18" font-weight="bold" fill="#24292f">
-    ${username}'s Contribution Animation
-  </text>
-  
-  <!-- Subtitle -->
-  <text x="20" y="45" font-family="sans-serif" font-size="12" fill="#656d76">
-    ${contributionCells.length} contributions this year • Updates daily
-  </text>
-  
-  <!-- Main Grid Container -->
-  <g class="contribution-grid" transform="translate(20, 60)">
-    ${generateBackgroundGrid(processedWeeks)}
-    ${generateAnimatedCells(contributionCells, animationDuration)}
-  </g>
-  
-  <!-- Legend -->
-  <g transform="translate(20, ${svgHeight - 25})">
-    <text x="0" y="0" font-family="sans-serif" font-size="11" fill="#656d76">Less</text>
-    ${['NONE', 'FIRST_QUARTILE', 'SECOND_QUARTILE', 'THIRD_QUARTILE', 'FOURTH_QUARTILE']
-      .map((level, i) => 
-        `<rect x="${50 + i * 15}" y="-9" width="9" height="9" rx="2" fill="${getContributionColor(level)}"/>`
-      ).join('')}
-    <text x="${50 + 5 * 15 + 15}" y="0" font-family="sans-serif" font-size="11" fill="#656d76">More</text>
-  </g>
-  
-  <!-- Watermark -->
-  <text x="${svgWidth - 10}" y="${svgHeight - 8}" font-family="sans-serif" font-size="9" fill="#8b949e" text-anchor="end">
-    🎯 github.com/Man0dya/contribution-canon
-  </text>
+  const shotIndexByPos = new Map();
+  targets.forEach((t, i) => shotIndexByPos.set(`${t.cx},${t.cy}`, i));
+
+  // Grid with embedded pop/color animations
+  let gridStr = '';
+  bubbles.forEach((b, idx) => {
+    const fill = getColorForLevel(b.level, noContributionColor);
+    const key = `${b.cx},${b.cy}`;
+    const shotIndex = shotIndexByPos.get(key);
+    let anims = `\n          <set attributeName="opacity" to="1" begin="cycle.begin"/>\n          <set attributeName="r" to="${radius}" begin="cycle.begin"/>\n          <set attributeName="fill" to="${fill}" begin="cycle.begin"/>`;
+    if (shotIndex !== undefined) {
+      const popUp = (radius * 1.35).toFixed(2);
+      anims += `\n          <animate attributeName="r" from="${radius}" to="${popUp}" begin="shot-${shotIndex}.end" dur="0.12s" fill="freeze"/>\n          <animate attributeName="r" from="${popUp}" to="${radius}" begin="shot-${shotIndex}.end+0.12s" dur="0.12s" fill="freeze"/>\n          <animate attributeName="opacity" from="1" to="0" begin="shot-${shotIndex}.end+0.12s" dur="0.06s" fill="freeze"/>\n          <set attributeName="fill" to="${noContributionColor}" begin="shot-${shotIndex}.end+0.19s"/>\n          <animate attributeName="opacity" from="0" to="1" begin="shot-${shotIndex}.end+0.22s" dur="0.08s" fill="freeze"/>`;
+    }
+    gridStr += `\n      <circle cx="${b.cx}" cy="${b.cy}" r="${radius}" fill="${fill}" opacity="1">${anims}\n      </circle>`;
+  });
+
+  // Bullets and pops
+  let bulletsStr = '';
+  let popsStr = '';
+  targets.forEach((t, i) => {
+    const begin = (i * (tShot + tGap)).toFixed(3);
+    const shotId = `shot-${i}`;
+    bulletsStr += `\n      <circle cx="${shooterX}" cy="${shooterY}" r="3.5" fill="${theme.shooter}" opacity="0">\n        <set attributeName="opacity" to="1" begin="cycle.begin+${begin}s"/>\n        <animate id="${shotId}" attributeName="cy" from="${shooterY}" to="${t.cy}" begin="cycle.begin+${begin}s" dur="${tShot}s" fill="freeze"/>\n        <animate attributeName="cx" from="${shooterX}" to="${t.cx}" begin="cycle.begin+${begin}s" dur="${tShot}s" fill="freeze"/>\n        <set attributeName="opacity" to="0" begin="${shotId}.end"/>\n      </circle>`;
+
+    popsStr += `\n      <circle cx="${t.cx}" cy="${t.cy}" r="${radius}" fill="none" stroke="${theme.explosion}" stroke-width="2" opacity="0">\n        <set attributeName="opacity" to="1" begin="${shotId}.end"/>\n        <animate attributeName="r" from="${radius}" to="${(radius * 1.8).toFixed(2)}" begin="${shotId}.end" dur="0.35s" fill="freeze"/>\n        <animate attributeName="opacity" from="1" to="0" begin="${shotId}.end" dur="0.35s" fill="freeze"/>\n      </circle>`;
+
+    for (let pi = 0; pi < 6; pi++) {
+      const ang = (pi * Math.PI) / 3;
+      const px = (t.cx + Math.cos(ang) * (radius * 1.6)).toFixed(2);
+      const py = (t.cy + Math.sin(ang) * (radius * 1.6)).toFixed(2);
+      popsStr += `\n      <circle cx="${t.cx}" cy="${t.cy}" r="1.6" fill="#ffd700" opacity="1">\n        <animate attributeName="cx" from="${t.cx}" to="${px}" begin="${shotId}.end" dur="0.35s" fill="freeze"/>\n        <animate attributeName="cy" from="${t.cy}" to="${py}" begin="${shotId}.end" dur="0.35s" fill="freeze"/>\n        <animate attributeName="opacity" from="1" to="0" begin="${shotId}.end" dur="0.35s" fill="freeze"/>\n      </circle>`;
+    }
+  });
+
+  const bgRect = transparent ? '' : `\n  <rect width="100%" height="100%" fill="#ffffff" rx="8"/>`;
+  const vbW = gridW;
+  const vbH = gridH + shooterYOffset;
+
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<svg width="100%" viewBox="0 0 ${vbW} ${vbH}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">\n${bgRect}
+  <!-- cycle timer to orchestrate begin/end and restart -->
+  <rect id="cycleTimer" x="-10" y="-10" width="1" height="1" fill="none">
+    <animate id="cycle" attributeName="x" from="-10" to="-9" begin="0s;cycle.end+1s" dur="${total}s" fill="freeze"/>
+  </rect>
+
+  <!-- shooter base -->
+  <rect x="${shooterX - 16}" y="${shooterY - 10}" width="32" height="10" rx="5" fill="${theme.shooter}" opacity="0.9"/>
+  <polygon points="${shooterX - 5},${shooterY - 10} ${shooterX + 5},${shooterY - 10} ${shooterX},${shooterY - 22}" fill="${theme.shooter}"/>
+
+  <!-- grid of bubbles (top wall) -->
+  ${gridStr}
+
+  <!-- bullets -->
+  ${bulletsStr}
+
+  <!-- pops and particles -->
+  ${popsStr}
 </svg>`;
-
-  return svg;
 }
 
-/**
- * Generate background grid (all contribution cells)
- */
-function generateBackgroundGrid(weeks) {
-  let grid = '';
-  
-  weeks.forEach((week, weekIndex) => {
-    week.forEach((day, dayIndex) => {
-      const x = weekIndex * 11 + 1;
-      const y = dayIndex * 11 + 1;
-      grid += `    <rect x="${x}" y="${y}" width="9" height="9" rx="2" fill="${day.color}"/>
-`;
-    });
-  });
-  
-  return grid;
-}
-
-/**
- * Generate animated contribution cells
- */
-function generateAnimatedCells(contributionCells, totalDuration) {
-  let animatedCells = '';
-  
-  contributionCells.forEach((cell, index) => {
-    const animationDelay = (index / contributionCells.length) * totalDuration * 0.8; // Stagger across 80% of duration
-    
-    // Main animated cell
-    animatedCells += `    <rect class="contribution-cell-animated" 
-      x="${cell.x}" y="${cell.y}" 
-      width="9" height="9" rx="2" 
-      fill="${cell.color}"
-      style="animation-delay: ${animationDelay.toFixed(2)}s;">
-    </rect>
-`;
-    
-    // Explosion particles
-    const particlePositions = [
-      { dx: -8, dy: -8 }, { dx: 8, dy: -8 },
-      { dx: -8, dy: 8 }, { dx: 8, dy: 8 },
-      { dx: 0, dy: -10 }, { dx: 0, dy: 10 }
-    ];
-    
-    particlePositions.forEach((pos, pIndex) => {
-      animatedCells += `    <circle class="explosion-particle" 
-        cx="${cell.x + 4.5}" cy="${cell.y + 4.5}" r="1.5" 
-        fill="#ffd700" opacity="0"
-        style="--dx: ${pos.dx}px; --dy: ${pos.dy}px; animation-delay: ${animationDelay.toFixed(2)}s;">
-      </circle>
-`;
-    });
-  });
-  
-  return animatedCells;
-}
-
-/**
- * Main execution
- */
 async function main() {
   try {
     console.log('🔄 Fetching contribution data from GitHub API...');
     const weeks = await fetchContributionData(username);
-    
-    console.log('🎨 Generating animated SVG...');
-    const svg = generateAnimatedSVG(weeks, username);
-    
-    // Write SVG files
+
+    // Normalize weeks to array of arrays with {count, level}
+    const normalized = weeks.map((w) =>
+      w.contributionDays.map((d) => ({
+        count: d.contributionCount,
+        level: d.contributionLevel,
+        date: d.date,
+      }))
+    );
+
+    // Themes for light and dark
+    const lightTheme = {
+      shooter: '#216e39', // GitHub green (light)
+      explosion: '#ff6b35',
+      noContribution: '#ebedf0',
+    };
+    const darkTheme = {
+      shooter: '#39d353', // GitHub green (dark)
+      explosion: '#ff9e64',
+      noContribution: '#161b22', // GitHub dark empty cell color
+    };
+
+    console.log('🎨 Generating bubble-shooter SVG (light)...');
+    const svgLight = buildBubbleShooterSVG({
+      data: normalized,
+      width: 1200,
+      height: 340,
+      theme: { shooter: lightTheme.shooter, explosion: lightTheme.explosion },
+      speedMul: 1,
+      noContributionColor: lightTheme.noContribution,
+      transparent: true,
+    });
+
+    console.log('🌙 Generating bubble-shooter SVG (dark)...');
+    const svgDark = buildBubbleShooterSVG({
+      data: normalized,
+      width: 1200,
+      height: 340,
+      theme: { shooter: darkTheme.shooter, explosion: darkTheme.explosion },
+      speedMul: 1,
+      noContributionColor: darkTheme.noContribution,
+      transparent: true,
+    });
+
     const outputs = [
-      { filename: `${username}-contribution-animation.svg`, content: svg },
-      { filename: 'contribution-animation.svg', content: svg }, // Generic filename
-      { filename: 'github-contribution-animation.svg', content: svg } // Snake-style naming
+      { filename: `${username}-contribution-animation.svg`, content: svgLight },
+      { filename: 'contribution-animation.svg', content: svgLight },
+      { filename: 'github-contribution-animation.svg', content: svgLight },
+      { filename: `${username}-contribution-animation-dark.svg`, content: svgDark },
+      { filename: 'contribution-animation-dark.svg', content: svgDark },
+      { filename: 'github-contribution-animation-dark.svg', content: svgDark },
     ];
-    
     outputs.forEach(({ filename, content }) => {
       fs.writeFileSync(filename, content);
       console.log(`✅ Generated: ${filename}`);
     });
-    
-    console.log(`🎯 Animation ready! Add this to your README:`);
-    console.log(`![Contribution Animation](${username}-contribution-animation.svg)`);
-    
+
+  console.log('✅ Done. Embed in README (auto light/dark):');
+  console.log('<picture>');
+  console.log(`  <source media="(prefers-color-scheme: dark)" srcset="${username}-contribution-animation-dark.svg" />`);
+  console.log(`  <img alt="Contribution Animation" src="${username}-contribution-animation.svg" />`);
+  console.log('</picture>');
   } catch (error) {
     console.error('❌ Error generating animation:', error.message);
     process.exit(1);
   }
 }
 
-// Run the generator
 main();
