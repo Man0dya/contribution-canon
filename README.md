@@ -153,6 +153,14 @@ npm run lint       # Lint
 
 ---
 
+## Contributing
+
+Contributions are welcome! Please read our [Contributing Guide](./CONTRIBUTING.md) and follow the [Code of Conduct](./CODE_OF_CONDUCT.md). Use our [issue templates](./.github/ISSUE_TEMPLATE) and [pull request template](./.github/pull_request_template.md) to streamline reviews.
+
+## Security
+
+Please report vulnerabilities privately. See [SECURITY.md](./SECURITY.md) for our policy and response timelines.
+
 ## License
 
 MIT — see [LICENSE](./LICENSE).
