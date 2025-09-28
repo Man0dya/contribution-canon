@@ -803,7 +803,7 @@ const convertContributionMapToWeeks = (contributionMap, startDate, endDate) => {
  */
 const generateRealisticMockData = (username) => {
   // Create patterns based on username characteristics for demo
-  const seed = username.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  let seed = username.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
   const rng = () => {
     const x = Math.sin(seed++) * 10000
     return x - Math.floor(x)
