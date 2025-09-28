@@ -2222,10 +2222,10 @@
           <set attributeName="fill" to="#ebedf0" begin="shot-77.end+0.19s"/>
           <animate attributeName="opacity" from="0" to="1" begin="shot-77.end+0.22s" dur="0.08s" fill="freeze"/>
       </circle>
-      <circle cx="735" cy="7" r="6" fill="#30a14e" opacity="1">
+      <circle cx="735" cy="7" r="6" fill="#216e39" opacity="1">
           <set attributeName="opacity" to="1" begin="cycle.begin"/>
           <set attributeName="r" to="6" begin="cycle.begin"/>
-          <set attributeName="fill" to="#30a14e" begin="cycle.begin"/>
+          <set attributeName="fill" to="#216e39" begin="cycle.begin"/>
           <animate attributeName="r" from="6" to="8.10" begin="shot-78.end" dur="0.12s" fill="freeze"/>
           <animate attributeName="r" from="8.10" to="6" begin="shot-78.end+0.12s" dur="0.12s" fill="freeze"/>
           <animate attributeName="opacity" from="1" to="0" begin="shot-78.end+0.12s" dur="0.06s" fill="freeze"/>
