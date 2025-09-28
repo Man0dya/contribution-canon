@@ -1,273 +1,168 @@
 <div align="center">
 
-# 🎯 Contribution Animation (Bubble‑Shooter)
+# Readme Contribution Graph Generator
 
-###  [**Live Demo**](https://man0dya.github.io/contribution-canon/) 
+Turn your GitHub contribution graph into a playful bubble‑shooter animated SVG you can embed in your README. Generate once or keep it up to date automatically with GitHub Actions.
 
-Transform your GitHub contribution graph into an epic animated display! Watch as your contributions pop and explode with spectacular effects, creating a dynamic visualization perfect for your README.
+👉 Live app: https://man0dya.github.io/Readme-Contribution-Graph-Generator
 
 </div>
 
 ---
 
-## � For Users
+## For users
 
-### 🚀 Quick Setup (2 Minutes)
+### Quick start (no code)
 
-#### Method 1: Automated Animation (Recommended)
-**Just like the GitHub Snake animation - set it and forget it!**
+1) Open the live app and enter your GitHub username
 
-1. **Copy automation files to your repository:**
-   ```bash
-   curl -L https://raw.githubusercontent.com/Man0dya/contribution-canon/main/.github/workflows/generate-contribution-animation.yml -o .github/workflows/generate-contribution-animation.yml
-   curl -L https://raw.githubusercontent.com/Man0dya/contribution-canon/main/scripts/generate-svg.cjs -o scripts/generate-svg.cjs
-   ```
+2) Customize
+- Theme: Default, GitHub, Ocean, Sunset
+- No‑contribution color and “Hide 0‑days” toggle
+- Animation speed: Slow, Normal, Fast
 
-2. **Add this line to your README.md:**
-   ```markdown
-   ![Contribution Animation](github-contribution-animation.svg)
-   ```
+3) Export
+- Download Animated SVG: for README animations
+- Download Static Graph SVG: plain contribution grid
+- Copy README snippet: auto/light/dark variants supported
 
-3. **Commit and push:**
-   ```bash
-   git add .
-   git commit -m "Add automated contribution animation"
-   git push
-   ```
+4) Add to your README
+- Commit the downloaded SVG to the repo root
+- Paste the generated Markdown snippet in README.md
 
-**✨ That's it!** Your animation will:
-- 🔄 Generate automatically every day at midnight UTC
-- 📊 Use your real GitHub contribution data
-- 🎯 Update whenever you push new code
-- ⚡ Require zero maintenance
+That’s it—your animated contribution graph will render on GitHub.
 
-#### Method 2: Manual Generation
+### Automate it in your own repo (daily refresh)
 
-1. Visit **[Contribution Animation Website](https://man0dya.github.io/contribution-canon)**
-2. Enter your GitHub username
-3. Customize your animation (theme, size, speed)
-4. Click **"Download SVG"**
-5. Save the file in your repository as `contribution-animation.svg`
-6. Add to your README:
-   ```markdown
-   ![My Contribution Animation](contribution-animation.svg)
-   ```
+This project provides:
+- scripts/generate-svg.cjs — a Node script that fetches your real contribution data and writes SVGs
+- A ready‑to‑use GitHub Actions workflow YAML
 
-### 🎨 Customization Options
+Steps:
+1) Create scripts/generate-svg.cjs in your repo and copy the script content from this repo or from the app’s “Automate in your own repo” section.
+2) Create .github/workflows/generate-contribution-animation.yml and paste the workflow from the app (or adapt to your needs).
+3) Commit and push. The workflow will:
+   - Run on push, manual dispatch, and nightly (00:00 UTC)
+   - Use the built‑in GITHUB_TOKEN—no PAT required
+   - Commit updated SVGs to your repository root
+4) Add the README snippet, for example:
 
-- **Themes**: Default, GitHub, Ocean, Sunset
-- **Sizes**: Small (600×150), Medium (800×200), Large (1000×250)  
-- **Animation Speed**: Slow, Normal, Fast
-- **Real-time Preview**: See changes instantly
+```markdown
+![My Contribution Animation](github-contribution-animation.svg)
+```
 
-### 📱 Where to Use
+Tip: The app can also generate a <picture> snippet for automatic light/dark mode.
 
-- ✅ GitHub Profile README
-- ✅ Repository documentation
-- ✅ Personal websites
-- ✅ Portfolio projects
-- ✅ Social media profiles
+### Troubleshooting
 
-### 🔧 Troubleshooting
-
-**Animation not showing?**
-- Ensure the SVG file is committed to your repository
-- Check that the file path in your markdown is correct
-- Verify your GitHub username is spelled correctly
-
-**Animation not updating?**
-- The automation runs daily - check back after 24 hours
-- Ensure the workflow file has proper permissions
-- Check the Actions tab in your repository for any errors
+- Image doesn’t appear: ensure the SVG file was committed to the same branch your README is on and the relative path matches.
+- Not updating daily: check the Actions tab for the “Generate Contribution Animation” workflow run; branch protection might block commits from workflows.
+- Private activity: the generator uses public signals; fully private activity is not included.
 
 ---
 
-## 👩‍� For Developers
+## For developers
 
-### 🛠️ Local Development Setup
+### Requirements
+- Node.js 18+ (20 LTS recommended)
+- npm
 
-1. **Clone and install:**
-   ```bash
-   git clone https://github.com/Man0dya/contribution-canon.git
-   cd contribution-canon
-   npm install
-   ```
+### Local development
 
-2. **Start development server:**
-   ```bash
-   npm run dev
-   ```
-   Visit `http://localhost:5173` to see the app running locally.
+```powershell
+# Install dependencies
+npm install
 
-3. **Build for production:**
-   ```bash
-   npm run build
-   npm run preview  # Test production build locally
-   ```
+# Start dev server (Vite)
+npm run dev
+# App will open at http://localhost:3000
 
-### 🏗️ Project Architecture
-
-```
-contribution-canon/
-├── .github/workflows/
-│   └── generate-contribution-animation.yml    # GitHub Actions automation
-├── scripts/
-│   └── generate-svg.cjs          # SVG generation script  
-├── src/
-│   ├── components/
-│   │   ├── Header.jsx            # Site header
-│   │   ├── UsernameForm.jsx      # Username input form
-│   │   └── CodeGenerator.jsx     # Bubble‑shooter SVG generator & customization
-│   │   └── Footer.jsx            # Site footer
-│   ├── utils/
-│   │   └── github.js             # GitHub API utilities
-│   ├── App.jsx                   # Root component
-│   ├── main.jsx                  # React entry point
-│   └── index.css                 # Global styles
-├── public/                       # Static assets
-├── package.json                  # Dependencies & scripts
-└── README.md                     # This file
-```
-
-### 🧰 Tech Stack
-
-- **Frontend Framework**: React 18 + Vite
-- **Styling**: Tailwind CSS + Custom CSS animations
-- **Animations**: Framer Motion for UI, CSS for SVG
-- **Icons**: Lucide React
-- **API**: GitHub GraphQL API
-- **Deployment**: GitHub Pages
-- **Automation**: GitHub Actions + Node.js
-
-### 🔧 Environment Setup
-
-Create `.env` file for development:
-```env
-VITE_GITHUB_TOKEN=ghp_your_token_here  # Optional: Higher API limits
-VITE_BASE_URL=http://localhost:5173    # Development URL
-```
-
-### 🚀 Deployment
-
-**GitHub Pages (Automatic):**
-```bash
-npm run deploy
-```
-
-**Manual deployment:**
-```bash
+# Build production bundle
 npm run build
-# Upload dist/ folder to your hosting provider
+
+# Preview the production build locally
+npm run preview
 ```
 
-### 🤝 Contributing
+### Deploying to GitHub Pages
 
-We welcome contributions! Here's how to get started:
+This repo contains a GitHub Actions workflow at `.github/workflows/deploy.yml` that builds and publishes `dist/` to the `gh-pages` branch on push to `main`.
 
-#### � Bug Reports
-1. Check [existing issues](https://github.com/Man0dya/contribution-canon/issues)
-2. Create detailed issue with:
-   - Steps to reproduce
-   - Expected vs actual behavior  
-   - Screenshots/videos if applicable
-   - Environment details (browser, OS)
+- Project site URL: `https://<user>.github.io/Readme-Contribution-Graph-Generator/`
+- Vite base is set to `/Readme-Contribution-Graph-Generator/` in `vite.config.js` so assets resolve under the repo path.
+- If you fork and rename the repository, update `base` accordingly.
 
-#### ✨ Feature Requests
-1. Open an issue with the `enhancement` label
-2. Describe the feature and its use case
-3. Include mockups or examples if possible
+Optional manual publish if you prefer pushing from your machine:
 
-#### 🔄 Pull Request Process
-1. **Fork the repository**
-2. **Create feature branch:**
-   ```bash
-   git checkout -b feature/amazing-new-feature
-   ```
-3. **Make your changes:**
-   - Follow existing code style
-   - Add comments for complex logic
-   - Update documentation if needed
-4. **Test thoroughly:**
-   ```bash
-   npm run dev    # Test in development
-   npm run build  # Ensure production build works
-   ```
-5. **Commit with clear messages:**
-   ```bash
-   git commit -m "feat: add new animation theme"
-   ```
-6. **Push and create Pull Request:**
-   ```bash
-   git push origin feature/amazing-new-feature
-   ```
+```powershell
+npm run build
+npm run deploy   # uses gh-pages to publish ./dist to gh-pages
+```
 
-#### 💡 Contribution Ideas
+### Project structure
 
-**Easy (Good First Issues):**
-- Add new color themes
-- Improve error messages
-- Add loading animations
-- Enhance mobile responsiveness
+```
+Readme-Contribution-Graph-Generator/
+├─ .github/workflows/
+│  ├─ deploy.yml                         # Pages deployment (builds and publishes dist)
+├─ public/
+│  └─ favicon.svg
+├─ scripts/
+│  └─ generate-svg.cjs                   # CLI generator for automated SVGs
+├─ src/
+│  ├─ App.jsx
+│  ├─ index.css
+│  ├─ main.jsx
+│  ├─ components/
+│  │  ├─ CodeGenerator.jsx               # Customization, downloads, README snippets, workflow/script copy
+│  │  ├─ Footer.jsx
+│  │  ├─ Header.jsx
+│  │  ├─ Hero.jsx
+│  │  └─ UsernameForm.jsx                # Username input + validation
+│  └─ utils/
+│     ├─ debug.js
+│     └─ github.js                       # Fetch/parse contribution data (multiple strategies)
+├─ index.html
+├─ package.json
+├─ tailwind.config.js
+├─ postcss.config.js
+└─ vite.config.js
+```
 
-**Medium:**
-- Add new animation patterns
-- Implement sound effects (toggleable)
-- Add GitHub stats integration
-- Create animation presets
+### How data fetching works (overview)
 
-**Advanced:**
-- Performance optimizations
-- Advanced SVG animations
-- Custom animation editor
-- Real-time collaboration features
+The client tries multiple approaches to derive your contribution calendar:
+- Parse GitHub’s public contribution graph HTML via safe CORS proxies
+- Use public activity feeds and repo activity to estimate contributions when needed
+The resulting 53‑week grid drives both the animated and static SVG outputs.
 
-### 📊 Development Scripts
+### Scripts
 
-```bash
+```powershell
 npm run dev        # Start development server
-npm run build      # Build for production
-npm run preview    # Preview production build
-npm run deploy     # Deploy to GitHub Pages
-npm run lint       # Run ESLint
-npm run format     # Format code with Prettier
+npm run build      # Build for production (dist/)
+npm run preview    # Preview dist locally
+npm run deploy     # Publish dist to gh-pages (optional local path)
+npm run lint       # Lint
 ```
 
-### 🔍 Code Style Guidelines
+### Notes for forks
 
-- Use **functional components** with hooks
-- Follow **ESLint** and **Prettier** configurations
-- Write **descriptive commit messages** (conventional commits)
-- Add **JSDoc comments** for complex functions
-- Use **TypeScript** for new features (migration in progress)
-
-### 🧪 Testing
-
-Currently using manual testing. Contributions welcome for:
-- Unit tests (Jest + React Testing Library)
-- Integration tests
-- E2E tests (Playwright/Cypress)
-- Visual regression tests
+- Update `vite.config.js` base to your repository name (e.g., `/my-fork-name/`) so GitHub Pages serves assets correctly.
+- The deployment workflow assumes the default branch is `main`; adjust if yours differs.
 
 ---
 
-## � License
+## License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+MIT — see [LICENSE](./LICENSE).
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
-- Inspired by [GitHub Snake](https://github.com/Platane/snk) by @Platane
-- GitHub for providing contribution data via their API
-- The React and Vite communities for excellent tooling
-- All contributors who help improve this project
+- Inspired by the fun of GitHub profile animations (e.g., snake)
+- Thanks to the React, Vite, Tailwind, and Framer Motion communities
 
-## 🆘 Support
+## Support
 
-- 📖 **Documentation**: Check this README and inline code comments
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/Man0dya/contribution-canon/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/Man0dya/contribution-canon/discussions)
-- ⭐ **Show Support**: Star the repository if you find it useful!
-
----
-
-**Transform your GitHub profile today! 🎯✨**
+- Open issues and feature requests on the repository
+- Star the project if it helps your profile shine ✨
