@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Copy, Check, Download, Code, Palette, Settings } from 'lucide-react'
+import { Copy, Check, Download, Code, Settings } from 'lucide-react'
 import generatorScript from '../../scripts/generate-svg.cjs?raw'
 
 const CodeGenerator = ({ username, contributionData }) => {
@@ -8,7 +8,6 @@ const CodeGenerator = ({ username, contributionData }) => {
   const [copiedWorkflow, setCopiedWorkflow] = useState(false)
   const [copiedScript, setCopiedScript] = useState(false)
   const [copiedReadme, setCopiedReadme] = useState(false)
-  const [selectedTheme, setSelectedTheme] = useState('default')
   const [animationSpeed, setAnimationSpeed] = useState('normal')
   const [noContributionColor, setNoContributionColor] = useState('#ebedf0')
   const [hideZeroDays, setHideZeroDays] = useState(false)
@@ -22,31 +21,11 @@ const CodeGenerator = ({ username, contributionData }) => {
     setStaticFileName(`${username}-contributions.svg`)
   }, [username])
 
-  const themes = {
-    default: {
-      name: 'Default',
-      shooter: '#4f46e5',
-      explosion: '#ff6b35',
-      background: '#ffffff'
-    },
-    github: {
-      name: 'GitHub',
-      shooter: '#216e39',
-      explosion: '#ff4444',
-      background: '#f6f8fa'
-    },
-    ocean: {
-      name: 'Ocean',
-      shooter: '#0ea5e9',
-      explosion: '#f97316',
-      background: '#f0f9ff'
-    },
-    sunset: {
-      name: 'Sunset',
-      shooter: '#dc2626',
-      explosion: '#fbbf24',
-      background: '#fef3c7'
-    }
+  // Fixed theme colors (default theme)
+  const theme = {
+    shooter: '#4f46e5',
+    explosion: '#ff6b35',
+    background: '#ffffff'
   }
 
   // Default viewBox for exported/previewed SVG; width attribute is 100% to match README width
@@ -61,7 +40,6 @@ const CodeGenerator = ({ username, contributionData }) => {
       </svg>`
     }
 
-    const theme = themes[selectedTheme]
     // Map speed to duration scale (lower = faster)
     const speedMul = animationSpeed === 'fast' ? 0.6 : animationSpeed === 'slow' ? 1.6 : 1
 
@@ -308,7 +286,6 @@ const CodeGenerator = ({ username, contributionData }) => {
   }
 
   const downloadAnimated = () => {
-    const theme = themes[selectedTheme]
     const speedMul = animationSpeed === 'fast' ? 0.6 : animationSpeed === 'slow' ? 1.6 : 1
     const svgContent = buildBubbleShooterSVG({
       username,
@@ -381,36 +358,7 @@ const CodeGenerator = ({ username, contributionData }) => {
                 <h3 className="text-2xl font-bold text-gray-800">Customization</h3>
               </div>
 
-              {/* Theme Selection */}
-              <div className="space-y-3">
-                <label className="block text-gray-700 font-medium">
-                  <Palette className="w-4 h-4 inline mr-2" />
-                  Theme
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  {Object.entries(themes).map(([key, theme]) => (
-                    <motion.button
-                      key={key}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => setSelectedTheme(key)}
-                      className={`p-3 rounded-lg border-2 transition-all ${
-                        selectedTheme === key
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 bg-gray-50 hover:bg-gray-100'
-                      }`}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div 
-                          className="w-4 h-4 rounded-full"
-                          style={{ backgroundColor: theme.shooter }}
-                        />
-                        <span className="text-gray-700 text-sm">{theme.name}</span>
-                      </div>
-                    </motion.button>
-                  ))}
-                </div>
-              </div>
+
 
               {/* Non-contribution bubble color */}
               <div className="space-y-3">
